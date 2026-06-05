@@ -359,7 +359,36 @@
     .marker__icon { aspect-ratio: 1; border-radius: var(--radius-l); background: var(--brand-green-deep); display: flex; align-items: center; justify-content: center; color: var(--brand-green-vivid); overflow: hidden; transition: transform var(--duration-default) var(--ease-out); }
     .marker:hover .marker__icon { transform: scale(1.03) rotate(-2deg); }
     [data-theme="dark"] .marker__icon { background: var(--brand-green-darker); }
-    .marker__icon svg { width: 50%; height: 50%; opacity: 0.85; }
+    .marker__icon svg { width: 56%; height: 56%; opacity: 0; transition: opacity 0.6s var(--ease-out); }
+    .marker.is-visible .marker__icon svg { opacity: 0.85; }
+    /* SVG géométriques de marque : trait = couleur d'icône, épaisseur constante quel que soit le viewBox */
+    .marker__icon svg * { stroke: currentColor; fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+    /* Assemblage à l'apparition : chaque forme grandit en place, en cascade */
+    .marker__icon svg > * { transform: scale(0.5); transform-box: fill-box; transform-origin: center; transition: transform 0.65s var(--ease-spring); }
+    .marker.is-visible .marker__icon svg > * { transform: scale(1); }
+    .marker.is-visible .marker__icon svg > *:nth-child(1)  { transition-delay: 0.05s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(2)  { transition-delay: 0.10s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(3)  { transition-delay: 0.15s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(4)  { transition-delay: 0.20s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(5)  { transition-delay: 0.25s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(6)  { transition-delay: 0.30s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(7)  { transition-delay: 0.35s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(8)  { transition-delay: 0.40s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(9)  { transition-delay: 0.45s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(10) { transition-delay: 0.50s; }
+    .marker.is-visible .marker__icon svg > *:nth-child(11) { transition-delay: 0.55s; }
+    /* Idle ambiant, très lent : rotation pour les formes radiales, flottement pour l'empilement */
+    @keyframes marker-spin    { to { transform: rotate(360deg); } }
+    @keyframes marker-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    @keyframes marker-float   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
+    @media (prefers-reduced-motion: no-preference) {
+      .markers .marker:nth-child(1) .marker__icon svg { animation: marker-spin 44s linear infinite; }       /* structure qui tourne */
+      .markers .marker:nth-child(2) .marker__icon svg { animation: marker-breathe 5s var(--ease-in-out) infinite; } /* orbe qui respire */
+      .markers .marker:nth-child(3) .marker__icon svg { animation: marker-float 6s var(--ease-in-out) infinite; }   /* strates qui flottent */
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marker__icon svg, .marker__icon svg > * { transform: none; }
+    }
     .marker__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-heading-l); color: var(--ink-strong); margin-bottom: var(--space-2); }
     .marker__desc { font-size: var(--text-body-m); color: var(--ink-muted); line-height: var(--leading-normal); }
 
@@ -757,11 +786,18 @@
         <div class="markers">
           <article class="marker reveal" style="--delay: 0ms;">
             <div class="marker__icon">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                <path d="M32 8 L56 20 L32 32 L8 20 Z"/>
-                <path d="M8 20 L8 44 L32 56 L32 32"/>
-                <path d="M56 20 L56 44 L32 56"/>
-                <path d="M20 14 L44 26"/>
+              <svg viewBox="0 0 304 352" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M182.25 158.223V190.776L152 208.135L121.75 190.776V158.223L152 140.864L182.25 158.223Z"/>
+                <path d="M215.191 140.157V211.53L151.569 247.557L88.7969 211.533V140.155L151.569 103.475L215.191 140.157Z"/>
+                <path d="M244.33 123.058V225.703L151.994 277.264L59.6592 225.704V123.058L151.994 71.0666L244.33 123.058Z"/>
+                <path d="M89.4102 140.337L60.838 123.922"/>
+                <path d="M214.453 140.412L243.824 123.539"/>
+                <path d="M151.993 246.446L151.993 275.919"/>
+                <path d="M151.997 311.876L151.997 348.329"/>
+                <path d="M271.731 107.507L303.025 89.529"/>
+                <path d="M32.2676 107.51L0.974298 89.5322"/>
+                <path d="M272.616 107.096V243.934L152.002 312.363L31.3877 243.934V107.096L152.002 38.666L272.616 107.096Z"/>
+                <path d="M303.25 88.9775V262.838L152 350.163L0.75 262.838V88.9775L152 0.868164L303.25 88.9775Z"/>
               </svg>
             </div>
             <h3 class="marker__title">Delivery</h3>
@@ -769,11 +805,16 @@
           </article>
           <article class="marker reveal" style="--delay: 120ms;">
             <div class="marker__icon">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="20" cy="24" r="8"/>
-                <circle cx="44" cy="24" r="8"/>
-                <circle cx="32" cy="46" r="8"/>
-                <path d="M26 26 L38 26 M24 30 L28 40 M40 30 L36 40"/>
+              <svg viewBox="0 0 239 234" fill="none" stroke="currentColor" aria-hidden="true">
+                <ellipse cx="119" cy="117" rx="10" ry="115.5"/>
+                <ellipse opacity="0.64" cx="92" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.64" cx="146.5" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.48" cx="65" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.48" cx="173.5" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.24" cx="38" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.24" cx="200.5" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.12" cx="11" cy="116.5" rx="9.5" ry="82"/>
+                <ellipse opacity="0.12" cx="227.5" cy="116.5" rx="9.5" ry="82"/>
               </svg>
             </div>
             <h3 class="marker__title">Collectif</h3>
@@ -781,10 +822,12 @@
           </article>
           <article class="marker reveal" style="--delay: 240ms;">
             <div class="marker__icon">
-              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                <rect x="14" y="36" width="36" height="14" rx="1"/>
-                <rect x="18" y="22" width="28" height="14" rx="1"/>
-                <rect x="22" y="8"  width="20" height="14" rx="1"/>
+              <svg viewBox="0 0 167 130" fill="none" stroke="currentColor" aria-hidden="true">
+                <ellipse cx="83.5" cy="11" rx="82" ry="9.5"/>
+                <ellipse opacity="0.64" cx="83.5" cy="38" rx="82" ry="9.5"/>
+                <ellipse opacity="0.48" cx="83.5" cy="65" rx="82" ry="9.5"/>
+                <ellipse opacity="0.24" cx="83.5" cy="92" rx="82" ry="9.5"/>
+                <ellipse opacity="0.12" cx="83.5" cy="119" rx="82" ry="9.5"/>
               </svg>
             </div>
             <h3 class="marker__title">Concret</h3>
