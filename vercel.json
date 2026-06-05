@@ -1,0 +1,15 @@
+{
+  "name": "cacd2-design-system",
+  "builds": [
+    {
+      "src": "Proposition/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/Proposition/$1"
+    }
+  ]
+}

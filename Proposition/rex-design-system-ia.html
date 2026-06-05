@@ -229,19 +229,10 @@
     .result__l { font-size:var(--text-body-m); color:var(--ink-muted); }
 
     /* ─── FINAL / CTA ────────────────────────────────────────── */
-    .final { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; width:100%; }
-    @media (max-width:900px){ .final { grid-template-columns:1fr; gap:var(--space-6); } }
-    .final__title { font-family:var(--font-display); font-weight:700; font-size:clamp(2rem,5vw,4rem); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); color:var(--ink-inverse); margin:0 0 var(--space-6); max-width:18ch; }
+    .final { display:flex; flex-direction:column; align-items:flex-start; max-width:600px; }
+    .final__title { font-family:var(--font-display); font-weight:700; font-size:clamp(2rem,5vw,4rem); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); color:var(--ink-inverse); margin:var(--space-6) 0; max-width:18ch; }
     .final__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-vivid); }
-    .final__actions { display:flex; gap:var(--space-3); flex-wrap:wrap; }
-    /* visuel 3D slide finale */
-    .final__visual { position:relative; height:clamp(360px,56vh,580px); overflow:hidden; }
-    @media (max-width:900px){ .final__visual { height:340px; } }
-    .final__spline { display:block; width:100%; height:100%; border:0; opacity:0; transition:opacity 1200ms var(--ease-out); }
-    .final__spline.is-loaded { opacity:1; }
-    /* cover badge "Built with Spline" — couleur = fond de la slide (inverse en light, elevated en dark) */
-    .final__visual-cover { position:absolute; bottom:0; left:0; right:0; height:90px; background:linear-gradient(to top, var(--surface-inverse) 42%, transparent); pointer-events:none; z-index:2; }
-    [data-theme="dark"] .final__visual-cover { background:linear-gradient(to top, var(--surface-elevated) 42%, transparent); }
+    .final__actions { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-top:var(--space-8); }
     .slide--inverse .btn--primary { background:var(--brand-green-vivid); color:var(--brand-green-darker); }
     .slide--inverse .btn--primary:hover { background:#fff; }
     .slide--inverse .btn--ghost { border-color:rgba(255,255,255,0.3); color:var(--ink-inverse); }
@@ -439,17 +430,11 @@
         <span class="slide__index"><b>07</b> — Et maintenant ?</span>
         <div class="slide__inner">
           <div class="final">
-            <div class="final__text">
-              <p class="eyebrow anim" style="color:var(--brand-green-vivid);">Discutons</p>
-              <h2 class="final__title anim" style="--delay:80ms;">Envie d'un système qui vous <em>ressemble</em> ?</h2>
-              <div class="final__actions anim" style="--delay:200ms;">
-                <a class="btn btn--primary" href="mailto:contact@cacd2.fr"><span>contact@cacd2.fr</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-                <a class="btn btn--ghost" href="index.html"><span>Revenir à l'accueil</span></a>
-              </div>
-            </div>
-            <div class="final__visual anim" style="--delay:160ms;" aria-hidden="true">
-              <spline-viewer class="final__spline" url="https://prod.spline.design/Y8KMg4crNi7Xa7yD/scene.splinecode" background-color="transparent"></spline-viewer>
-              <div class="final__visual-cover"></div>
+            <p class="eyebrow anim" style="color:var(--brand-green-vivid);">Discutons</p>
+            <h2 class="final__title anim" style="--delay:80ms;">Envie d'un système qui vous <em>ressemble</em> ?</h2>
+            <div class="final__actions anim" style="--delay:200ms;">
+              <a class="btn btn--primary" href="mailto:contact@cacd2.fr"><span>contact@cacd2.fr</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+              <a class="btn btn--ghost" href="index.html"><span>Revenir à l'accueil</span></a>
             </div>
           </div>
         </div>
@@ -551,25 +536,6 @@
       render();
     })();
 
-    // Spline (slide finale) : fondu quand prêt + masquage badge
-    (function () {
-      const el = document.querySelector('.final__spline');
-      if (!el) return;
-      const markLoaded = () => el.classList.add('is-loaded');
-      const hideBadge = () => {
-        const sh = el.shadowRoot; if (!sh) return;
-        sh.querySelectorAll('#logo, a[href*="spline"], a[target="_blank"]').forEach(n => n.remove());
-        if (!sh.querySelector('#cacd2-badge-fix')) {
-          const s = document.createElement('style');
-          s.id = 'cacd2-badge-fix';
-          s.textContent = ':host,canvas{background:transparent!important}#logo,a[href*="spline"]{display:none!important;opacity:0!important}';
-          sh.appendChild(s);
-        }
-      };
-      el.addEventListener('load', () => { markLoaded(); hideBadge(); });
-      [100, 400, 1000, 2500, 4000].forEach(d => setTimeout(hideBadge, d));
-      setTimeout(markLoaded, 3000);
-    })();
   </script>
 
 </body>
