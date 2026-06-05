@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CACD2 — Le partenaire digital du groupe Crédit Agricole</title>
+  <meta name="description" content="Filiale 100% Crédit Agricole S.A., CACD2 conçoit et réalise les projets digitaux du groupe — du design jusqu'à la mise en production.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+
+  <!-- Spline 3D viewer (Web Component vanilla, équivalent du composant React @splinetool/react-spline) -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.40/build/spline-viewer.js"></script>
+
+  <style>
+    /* ============================================================
+       CACD2 DESIGN SYSTEM — v0.6 inline bundle
+       Source canonique : tokens.css + styles.css (mêmes dossier)
+       Inliné pour compatibilité preview sandbox (URLs locales bloquées)
+       ============================================================ */
+
+    :root {
+      color-scheme: light;
+      --surface-mint:      #E8F5EC;
+      --surface-base:      #FFFFFF;
+      --surface-elevated:  #FAFBF9;
+      --surface-inverse:   #0E2E22;
+      --surface-deepest:   #061811;
+      --ink-strong:    #0A0F0D;
+      --ink-default:   #1C2622;
+      --ink-muted:     #5B6661;
+      --ink-subtle:    #97A29D;
+      --ink-inverse:   #FFFFFF;
+      --brand-green:        #01A04C;
+      --brand-green-soft:   #E8F5EC;
+      --brand-green-deep:   #0E2E22;
+      --brand-green-darker: #061811;
+      --brand-green-vivid:  #2EE07A;
+      --accent-teal:   #2EB5A8;
+      --accent-amber:  #D4A038;
+      --iridescent-1: #FF7A45;
+      --iridescent-2: #E5478B;
+      --iridescent-3: #7950F2;
+      --iridescent-4: #2389E5;
+      --border-subtle:  rgba(10, 15, 13, 0.08);
+      --border-default: rgba(10, 15, 13, 0.16);
+      --border-strong:  rgba(10, 15, 13, 0.40);
+      --font-display:    'Poppins', 'Helvetica Neue', Arial, sans-serif;
+      --font-body:       'Inter', 'Helvetica Neue', Arial, sans-serif;
+      --font-editorial:  'Fraunces', 'Times New Roman', serif;
+      --font-mono:       'JetBrains Mono', 'SF Mono', Menlo, monospace;
+      --text-display-2xl: clamp(5rem, 14vw, 11rem);
+      --text-display-xl:  clamp(3rem, 7vw, 5.5rem);
+      --text-display-l:   clamp(2.25rem, 5vw, 3.5rem);
+      --text-display-m:   clamp(1.75rem, 3.5vw, 2.5rem);
+      --text-display-s:   clamp(1.5rem, 2.5vw, 2rem);
+      --text-heading-l:   1.5rem;
+      --text-heading-m:   1.25rem;
+      --text-body-xl:     1.125rem;
+      --text-body-l:      1rem;
+      --text-body-m:      0.875rem;
+      --text-caption:     0.75rem;
+      --leading-tight:   1.05;
+      --leading-snug:    1.2;
+      --leading-normal:  1.5;
+      --leading-relaxed: 1.7;
+      --tracking-tight:     -0.02em;
+      --tracking-normal:    0;
+      --tracking-wide:      0.08em;
+      --tracking-uppercase: 0.14em;
+      --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+      --space-4: 16px; --space-5: 24px; --space-6: 32px;
+      --space-7: 48px; --space-8: 64px; --space-9: 96px;
+      --space-10: 144px; --space-11: 200px;
+      --radius-xs: 4px;  --radius-s: 8px;  --radius-m: 16px;
+      --radius-l: 24px;  --radius-xl: 32px;
+      --radius-pill: 999px; --radius-full: 50%;
+      --shadow-xs: 0 1px 2px rgba(10, 15, 13, 0.04);
+      --shadow-s:  0 2px 8px rgba(10, 15, 13, 0.06);
+      --shadow-m:  0 8px 24px rgba(10, 15, 13, 0.08);
+      --shadow-l:  0 24px 48px rgba(10, 15, 13, 0.10);
+      --shadow-xl: 0 40px 80px rgba(10, 15, 13, 0.16);
+      --container-max: 1280px;
+      --container-px:  clamp(20px, 4vw, 64px);
+      --grid-gap:      24px;
+      --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+      --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+      --duration-fast:    150ms;
+      --duration-default: 280ms;
+      --duration-slow:    480ms;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --surface-mint:     #0E2E22;
+      --surface-base:     #0A0F0D;
+      --surface-elevated: #142019;
+      --surface-inverse:  #FAFBF9;
+      --surface-deepest:  #FFFFFF;
+      --ink-strong:  #FFFFFF;
+      --ink-default: #E8EDEA;
+      --ink-muted:   #97A29D;
+      --ink-subtle:  #5B6661;
+      --ink-inverse: #0A0F0D;
+      --brand-green:       #2EE07A;
+      --brand-green-soft:  #142019;
+      --brand-green-deep:  #2EE07A;
+      --border-subtle:  rgba(255, 255, 255, 0.08);
+      --border-default: rgba(255, 255, 255, 0.16);
+      --border-strong:  rgba(255, 255, 255, 0.40);
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.30);
+      --shadow-s:  0 2px 8px rgba(0, 0, 0, 0.40);
+      --shadow-m:  0 8px 24px rgba(0, 0, 0, 0.50);
+      --shadow-l:  0 24px 48px rgba(0, 0, 0, 0.60);
+      --shadow-xl: 0 40px 80px rgba(0, 0, 0, 0.70);
+    }
+
+    /* ─── RESET ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { margin: 0; }
+    img, svg { display: block; max-width: 100%; }
+    button { font: inherit; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; padding: 0; margin: 0; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-body-l);
+      line-height: var(--leading-normal);
+      color: var(--ink-default);
+      background: var(--surface-mint);
+      overflow-x: hidden; /* évite la scrollbar horizontale du Spline qui déborde */
+      transition: background-color var(--duration-default) var(--ease-out), color var(--duration-default) var(--ease-out);
+    }
+    ::selection { background: var(--brand-green); color: var(--ink-inverse); }
+
+    /* ─── SCROLL SNAP — natif mandatory, s'arrête sur chaque section ─
+       Géré par le navigateur (pas de JS), snap pendant la décélération = zéro délai */
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scroll-padding-top: 0;
+    }
+    .section, .cta-section {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-snap-type: none; scroll-behavior: auto; }
+    }
+    /* Mobile : scroll natif libre, plus naturel au doigt */
+    @media (max-width: 960px) {
+      html { scroll-snap-type: none; }
+    }
+
+    /* ─── PRIMITIVES ─────────────────────────────────────────────── */
+    .container { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-px); }
+
+    .eyebrow {
+      font-family: var(--font-display); font-size: var(--text-caption);
+      font-weight: 600; letter-spacing: var(--tracking-uppercase); text-transform: uppercase;
+      color: var(--brand-green);
+    }
+    .hero__eyebrow > span:first-child { color: var(--accent-amber); }
+
+    .display { font-family: var(--font-display); font-weight: 700; line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); color: var(--ink-strong); }
+    .display em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-deep); }
+    [data-theme="dark"] .display em { color: var(--brand-green-vivid); }
+
+    /* ─── HEADER ─────────────────────────────────────────────────── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--surface-mint) 84%, transparent);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-4); }
+    .header__logo { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: 700; font-size: var(--text-body-l); letter-spacing: var(--tracking-tight); color: var(--ink-strong); }
+    .header__logo-mark { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-s); background: var(--brand-green); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 16px; letter-spacing: -0.04em; }
+    .header__nav { display: flex; gap: var(--space-6); font-size: var(--text-body-m); color: var(--ink-muted); }
+    .header__nav a { position: relative; padding-block: var(--space-2); transition: color var(--duration-fast) var(--ease-out); }
+    .header__nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform 280ms var(--ease-out); }
+    .header__nav a:hover { color: var(--ink-strong); }
+    .header__nav a:hover::after { transform: scaleX(1); }
+    .header__actions { display: flex; align-items: center; gap: var(--space-3); }
+
+    .theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: var(--radius-pill); background: transparent; border: 1px solid var(--border-default); color: var(--ink-default); transition: all var(--duration-fast) var(--ease-out); }
+    .theme-toggle:hover { background: var(--surface-base); border-color: var(--border-strong); transform: rotate(8deg); }
+    .theme-toggle svg { width: 18px; height: 18px; transition: transform 400ms var(--ease-spring); }
+    .theme-toggle .icon-sun  { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* ─── BUTTONS — magnetic glow micro-interaction ──────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      font-family: var(--font-display); font-size: var(--text-body-m); font-weight: 600;
+      border-radius: var(--radius-pill); border: 1px solid transparent;
+      transition: all var(--duration-fast) var(--ease-out);
+      position: relative; overflow: hidden;
+    }
+    .btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle 100px at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.20), transparent 70%);
+      opacity: 0; transition: opacity 280ms var(--ease-out); pointer-events: none;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn > * { position: relative; z-index: 1; }
+    .btn svg { transition: transform 240ms var(--ease-out); }
+    .btn:hover svg { transform: translateX(4px); }
+
+    .btn--primary { background: var(--brand-green-deep); color: var(--ink-inverse); }
+    .btn--primary:hover { background: var(--brand-green); transform: translateY(-2px); box-shadow: var(--shadow-m); }
+    .btn--ghost { background: transparent; border-color: var(--border-default); color: var(--ink-strong); }
+    .btn--ghost:hover { border-color: var(--ink-strong); background: var(--surface-base); }
+    [data-theme="dark"] .btn--primary { background: var(--brand-green-vivid); color: var(--ink-inverse); }
+
+    /* ─── EDITORIAL SIDEBAR ──────────────────────────────────────── */
+    .editorial-sidebar {
+      position: absolute; top: var(--space-7); left: var(--container-px); bottom: var(--space-7);
+      display: flex; flex-direction: column; justify-content: space-between;
+      pointer-events: none;
+      font-family: var(--font-display); font-size: var(--text-caption);
+      font-weight: 500; letter-spacing: var(--tracking-uppercase); text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .editorial-sidebar__label { writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: var(--tracking-uppercase); }
+    .editorial-sidebar__tag { writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: var(--tracking-uppercase); color: var(--brand-green); font-weight: 600; font-size: 0.7rem; align-self: center; margin-block: var(--space-5); }
+    .editorial-sidebar__page { font-variant-numeric: tabular-nums; color: var(--ink-strong); }
+    .editorial-sidebar__page span { color: var(--ink-muted); font-weight: 400; }
+
+    /* ─── SECTION BASE ───────────────────────────────────────────── */
+    .section { position: relative; min-height: 100vh; padding-block: var(--space-10) var(--space-9); display: flex; align-items: center; }
+    .section--mint { background: var(--surface-mint); }
+    .section--base { background: var(--surface-base); }
+    .section--inverse { background: var(--surface-inverse); color: var(--ink-inverse); }
+    .section--inverse .display { color: var(--ink-inverse); }
+    .section--inverse .display em { color: var(--brand-green-vivid); }
+    .section--inverse .eyebrow { color: var(--brand-green-vivid); }
+    [data-theme="dark"] .section--inverse { background: var(--surface-elevated); }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    .hero { min-height: calc(100vh - 80px); padding-top: var(--space-9); }
+    .hero__inner { display: grid; grid-template-columns: 1fr 1.35fr; gap: var(--space-5); align-items: center; }
+    @media (max-width: 960px) { .hero__inner { grid-template-columns: 1fr; gap: var(--space-7); } }
+    .hero__eyebrow { margin-bottom: var(--space-5); }
+    .hero__title { font-size: var(--text-display-xl); margin-bottom: var(--space-5); }
+    .hero__subtitle { font-size: var(--text-body-xl); color: var(--ink-muted); max-width: 52ch; margin-bottom: var(--space-7); }
+    .hero__actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+    /* ─── SPLINE — déborde à droite hors-viewport pour ne pas couper l'animation ─ */
+    .hero__visual-wrap {
+      position: relative;
+      /* Plus large que sa colonne + déborde à droite : la touche en rotation
+         a de l'espace, le clipping (overflow hidden, pour le badge) a lieu hors-écran */
+      width: calc(100% + 14vw);
+      margin-right: -14vw;
+      height: clamp(500px, 74vh, 860px);
+      overflow: hidden;
+      background: transparent;
+    }
+    @media (max-width: 960px) {
+      .hero__visual-wrap { width: 100%; margin-right: 0; height: 420px; }
+    }
+    spline-viewer.hero__visual {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    /* Fade-in du Spline quand prêt */
+    spline-viewer { opacity: 0; transition: opacity 1200ms var(--ease-out); }
+    spline-viewer.is-loaded { opacity: 1; }
+    /* Badge cover — bande pleine largeur en bas. Le badge Spline est centré-bas,
+       la touche 3D ne descend pas jusqu'en bas → le cover ne la masque pas. */
+    .hero__visual-cover {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 130px;
+      background: linear-gradient(
+        to top,
+        var(--surface-mint) 0%,
+        var(--surface-mint) 60%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    /* ─── STATS ──────────────────────────────────────────────────── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); width: 100%; }
+    @media (max-width: 880px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    .stat { padding: var(--space-7) var(--space-5); border-radius: var(--radius-l); background: var(--surface-base); border: 1px solid var(--border-subtle); transition: transform var(--duration-default) var(--ease-out), box-shadow var(--duration-default) var(--ease-out), border-color var(--duration-default) var(--ease-out); }
+    .stat:hover { transform: translateY(-6px); box-shadow: var(--shadow-m); border-color: var(--brand-green); }
+    [data-theme="dark"] .stat { background: var(--surface-elevated); border-color: var(--border-subtle); }
+    .stat__value { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; letter-spacing: var(--tracking-tight); color: var(--brand-green-deep); margin-bottom: var(--space-3); }
+    [data-theme="dark"] .stat__value { color: var(--brand-green-vivid); }
+    .stat__value sup { font-size: 0.5em; color: var(--brand-green); vertical-align: super; }
+    .stat--highlight .stat__value { color: var(--brand-green-deep); }
+    .stat--highlight .stat__value sup { color: var(--accent-amber); }
+    [data-theme="dark"] .stat--highlight .stat__value { color: var(--brand-green-vivid); }
+    .stat__label { font-size: var(--text-body-m); color: var(--ink-muted); font-weight: 500; }
+
+    /* ─── SECTION HEADER ─────────────────────────────────────────── */
+    .section-header { margin-bottom: var(--space-8); max-width: 760px; }
+    .section-header__eyebrow { margin-bottom: var(--space-4); }
+    .section-header__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-display-l); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); color: var(--ink-strong); margin-bottom: var(--space-5); }
+    .section-header__title em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-deep); }
+    [data-theme="dark"] .section-header__title em { color: var(--brand-green-vivid); }
+    .section-header__lead { font-size: var(--text-body-xl); color: var(--ink-muted); max-width: 60ch; }
+
+    /* ─── PILLARS ────────────────────────────────────────────────── */
+    .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); width: 100%; }
+    @media (max-width: 1080px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px)  { .pillars { grid-template-columns: 1fr; } }
+    .pillar { display: flex; flex-direction: column; padding: var(--space-6); background: var(--surface-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-l); min-height: 280px; transition: all var(--duration-default) var(--ease-out); }
+    [data-theme="dark"] .pillar { background: var(--surface-elevated); }
+    .pillar:hover { transform: translateY(-6px); border-color: var(--brand-green); box-shadow: var(--shadow-m); }
+    .pillar__num { font-family: var(--font-mono); font-size: var(--text-caption); color: var(--brand-green); margin-bottom: var(--space-5); font-variant-numeric: tabular-nums; }
+    .pillar__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-heading-l); color: var(--ink-strong); margin-bottom: var(--space-3); line-height: var(--leading-snug); }
+    .pillar__desc { font-size: var(--text-body-m); color: var(--ink-muted); line-height: var(--leading-normal); margin-bottom: var(--space-5); flex: 1; }
+    .pillar__arrow { display: inline-flex; align-items: center; gap: var(--space-2); font-family: var(--font-display); font-weight: 600; font-size: var(--text-body-m); color: var(--ink-strong); }
+    .pillar__arrow svg { transition: transform var(--duration-fast) var(--ease-out); }
+    .pillar:hover .pillar__arrow svg { transform: translateX(6px); }
+
+    /* ─── SECTION DIVIDER ────────────────────────────────────────── */
+    .section-divider__inner { display: grid; grid-template-columns: auto 1fr; gap: var(--space-7); align-items: end; width: 100%; }
+    @media (max-width: 880px) { .section-divider__inner { grid-template-columns: 1fr; align-items: start; } }
+    .section-divider__num { font-family: var(--font-display); font-weight: 800; font-size: clamp(8rem, 32vw, 32rem); line-height: 0.78; letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 2px var(--brand-green); }
+    .section-divider__label { font-family: var(--font-display); font-weight: 700; font-size: clamp(3rem, 6vw, 5rem); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); color: var(--ink-strong); margin-bottom: var(--space-4); }
+    .section-divider__expertises { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); width: 100%; }
+    @media (max-width: 720px) { .section-divider__expertises { grid-template-columns: 1fr; } }
+    .expertise-card { padding: var(--space-6); background: var(--surface-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-l); display: flex; align-items: center; gap: var(--space-5); transition: all var(--duration-default) var(--ease-out); }
+    [data-theme="dark"] .expertise-card { background: var(--surface-elevated); }
+    .expertise-card:hover { border-color: var(--brand-green); transform: translateX(6px); }
+    .expertise-card__num { font-family: var(--font-mono); font-size: var(--text-caption); font-weight: 600; color: var(--brand-green); font-variant-numeric: tabular-nums; flex-shrink: 0; width: 32px; }
+    .expertise-card__title { font-family: var(--font-display); font-weight: 600; font-size: var(--text-heading-m); color: var(--ink-strong); line-height: var(--leading-snug); }
+
+    /* ─── MARQUEURS ──────────────────────────────────────────────── */
+    .markers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); width: 100%; }
+    @media (max-width: 880px) { .markers { grid-template-columns: 1fr; } }
+    .marker { display: flex; flex-direction: column; gap: var(--space-5); }
+    .marker__icon { aspect-ratio: 1; border-radius: var(--radius-l); background: var(--brand-green-deep); display: flex; align-items: center; justify-content: center; color: var(--brand-green-vivid); overflow: hidden; transition: transform var(--duration-default) var(--ease-out); }
+    .marker:hover .marker__icon { transform: scale(1.03) rotate(-2deg); }
+    [data-theme="dark"] .marker__icon { background: var(--brand-green-darker); }
+    .marker__icon svg { width: 50%; height: 50%; opacity: 0.85; }
+    .marker__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-heading-l); color: var(--ink-strong); margin-bottom: var(--space-2); }
+    .marker__desc { font-size: var(--text-body-m); color: var(--ink-muted); line-height: var(--leading-normal); }
+
+    /* ─── CASES ──────────────────────────────────────────────────── */
+    .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); width: 100%; }
+    @media (max-width: 880px) { .cases { grid-template-columns: 1fr; } }
+    .case { display: flex; flex-direction: column; background: var(--surface-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-l); overflow: hidden; transition: all var(--duration-default) var(--ease-out); }
+    [data-theme="dark"] .case { background: var(--surface-elevated); }
+    .case:hover { transform: translateY(-6px); box-shadow: var(--shadow-l); }
+    .case__visual { aspect-ratio: 16 / 10; background: var(--brand-green-soft); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .case__visual--dark { background: var(--brand-green-deep); }
+    .case__visual::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(46, 224, 122, 0.15), transparent 60%); pointer-events: none; }
+    .mockup-phone, .mockup-screen { position: relative; z-index: 1; background: var(--surface-inverse); border-radius: var(--radius-l); box-shadow: var(--shadow-l); transition: transform var(--duration-default) var(--ease-out); }
+    .case:hover .mockup-phone, .case:hover .mockup-screen { transform: translateY(-4px); }
+    .mockup-phone { width: 40%; aspect-ratio: 9 / 19; padding: var(--space-2); border-radius: 24px; }
+    .mockup-phone__screen { width: 100%; height: 100%; background: linear-gradient(180deg, #1a2530, #0e1822); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--ink-inverse); font-family: var(--font-display); font-size: var(--text-body-m); font-weight: 600; }
+    .mockup-screen { width: 78%; aspect-ratio: 16 / 10; padding: var(--space-3); border-radius: var(--radius-m); background: #fff; border: 1px solid var(--border-subtle); display: grid; grid-template-columns: 80px 1fr; gap: var(--space-2); }
+    .mockup-screen__sidebar { background: #1A4FB8; border-radius: var(--radius-s); }
+    .mockup-screen__main { background: #F4F6F9; border-radius: var(--radius-s); display: flex; flex-direction: column; gap: 4px; padding: var(--space-2); }
+    .mockup-screen__main span { display: block; height: 6px; border-radius: 3px; background: rgba(26, 79, 184, 0.25); }
+    .mockup-screen__main span:nth-child(1) { width: 60%; }
+    .mockup-screen__main span:nth-child(2) { width: 80%; }
+    .mockup-screen__main span:nth-child(3) { width: 45%; }
+    .mockup-screen__main span:nth-child(4) { width: 70%; }
+    .case__body { padding: var(--space-6); }
+    .case__category { font-family: var(--font-mono); font-size: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-uppercase); color: var(--brand-green); margin-bottom: var(--space-3); }
+    .case__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-display-s); color: var(--ink-strong); margin-bottom: var(--space-3); line-height: var(--leading-snug); }
+    .case__desc { font-size: var(--text-body-m); color: var(--ink-muted); line-height: var(--leading-normal); }
+
+    /* ─── QUOTE ──────────────────────────────────────────────────── */
+    .quote { text-align: left; max-width: 1000px; margin-inline: auto; }
+    .quote__mark { font-family: var(--font-editorial); font-size: clamp(6rem, 12vw, 10rem); line-height: 0.6; color: var(--brand-green); margin-bottom: var(--space-2); font-style: italic; }
+    .quote__text { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.25; letter-spacing: var(--tracking-tight); color: var(--ink-strong); margin-bottom: var(--space-6); }
+    .quote__text em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-deep); }
+    [data-theme="dark"] .quote__text em { color: var(--brand-green-vivid); }
+    .quote__author { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-size: var(--text-body-m); font-weight: 500; color: var(--ink-muted); }
+    .quote__author::before { content: ''; width: 32px; height: 1px; background: var(--ink-muted); }
+
+    /* ─── BOTANICAL ACCENT ───────────────────────────────────────── */
+    .botanical-accent { position: absolute; pointer-events: none; color: var(--brand-green); opacity: 0.25; }
+    .botanical-accent svg { width: 100%; height: 100%; }
+    [data-theme="dark"] .botanical-accent { opacity: 0.18; color: var(--brand-green-vivid); }
+
+    /* ─── ALMANACH TABLE ─────────────────────────────────────────── */
+    .almanach { margin-top: var(--space-8); width: 100%; border-top: 1px solid var(--ink-strong); }
+    .almanach__header, .almanach__row { display: grid; grid-template-columns: 1.7fr 1.4fr 1fr 1fr; gap: var(--space-5); padding: var(--space-4) 0; border-bottom: 1px solid var(--border-default); align-items: baseline; }
+    @media (max-width: 880px) { .almanach__header, .almanach__row { grid-template-columns: 1fr; gap: var(--space-2); } .almanach__header > div + div { display: none; } }
+    .almanach__header { font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: var(--tracking-uppercase); text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--ink-strong); }
+    .almanach__row { font-family: var(--font-body); font-size: var(--text-body-l); color: var(--ink-default); transition: background-color var(--duration-fast) var(--ease-out); }
+    .almanach__row:hover { background: color-mix(in srgb, var(--brand-green) 6%, transparent); }
+    .almanach__name { font-family: var(--font-display); font-weight: 600; font-size: var(--text-heading-m); color: var(--ink-strong); line-height: 1.2; }
+    .almanach__name em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-deep); }
+    [data-theme="dark"] .almanach__name em { color: var(--brand-green-vivid); }
+    .almanach__cell { font-variant-numeric: tabular-nums; color: var(--ink-muted); font-size: var(--text-body-m); line-height: 1.4; }
+    .almanach__cell em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--ink-default); }
+
+    /* ─── REX TEASER CARD (Lab) ──────────────────────────────────── */
+    .rex-card { display:grid; grid-template-columns:0.85fr 1.15fr; background:var(--surface-mint); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); overflow:hidden; transition:all var(--duration-default) var(--ease-out); width:100%; }
+    [data-theme="dark"] .rex-card { background:var(--surface-elevated); }
+    .rex-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-l); border-color:var(--brand-green); }
+    @media (max-width:780px){ .rex-card { grid-template-columns:1fr; } }
+    .rex-card__visual { position:relative; background:var(--brand-green-deep); min-height:320px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .rex-card__visual::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 25%, rgba(46,224,122,0.20), transparent 60%); }
+    .rex-card__tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:58%; position:relative; z-index:1; }
+    .rex-card__tiles span { aspect-ratio:1; border-radius:10px; background:rgba(255,255,255,0.07); border:1px solid rgba(46,224,122,0.22); transition:all var(--duration-default) var(--ease-out); }
+    .rex-card:hover .rex-card__tiles span:nth-child(2){ background:rgba(46,224,122,0.28); }
+    .rex-card__tiles span:nth-child(2){ background:rgba(46,224,122,0.20); }
+    .rex-card__tiles span:nth-child(5){ background:rgba(255,255,255,0.14); }
+    .rex-card__tiles span:nth-child(3){ background:rgba(212,160,56,0.22); border-color:rgba(212,160,56,0.3); }
+    .rex-card__badge { position:absolute; top:22px; left:22px; z-index:2; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.16em; color:var(--brand-green-vivid); border:1px solid rgba(46,224,122,0.4); padding:5px 12px; border-radius:var(--radius-pill); }
+    .rex-card__body { padding:var(--space-8) var(--space-7); display:flex; flex-direction:column; justify-content:center; }
+    .rex-card__category { font-family:var(--font-mono); font-size:var(--text-caption); text-transform:uppercase; letter-spacing:var(--tracking-uppercase); color:var(--brand-green); margin-bottom:var(--space-4); }
+    .rex-card__title { font-family:var(--font-display); font-weight:700; font-size:var(--text-display-s); color:var(--ink-strong); line-height:var(--leading-snug); margin:0 0 var(--space-4); }
+    .rex-card__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-deep); }
+    [data-theme="dark"] .rex-card__title em { color:var(--brand-green-vivid); }
+    .rex-card__desc { font-size:var(--text-body-m); color:var(--ink-muted); line-height:var(--leading-normal); margin:0 0 var(--space-6); max-width:52ch; }
+    .rex-card__meta { display:flex; align-items:center; gap:var(--space-3); font-family:var(--font-display); font-size:var(--text-body-m); font-weight:500; color:var(--ink-muted); flex-wrap:wrap; }
+    .rex-card__link { display:inline-flex; align-items:center; gap:var(--space-2); margin-left:auto; color:var(--ink-strong); font-weight:600; }
+    .rex-card__link svg { transition:transform var(--duration-fast) var(--ease-out); }
+    .rex-card:hover .rex-card__link svg { transform:translateX(5px); }
+    @media (max-width:780px){ .rex-card__link { margin-left:0; } }
+
+    /* ─── CTA + FOOTER ───────────────────────────────────────────── */
+    .cta-section { background: var(--surface-inverse); color: var(--ink-inverse); padding-block: var(--space-10); min-height: 80vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+    [data-theme="dark"] .cta-section { background: var(--brand-green-darker); }
+    .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(46, 224, 122, 0.18), transparent 50%), radial-gradient(circle at 20% 80%, rgba(46, 181, 168, 0.12), transparent 50%); pointer-events: none; }
+    .cta-section__inner { position: relative; z-index: 1; }
+    .cta-section__title { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 7vw, 6rem); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); color: var(--ink-inverse); margin-bottom: var(--space-6); max-width: 18ch; }
+    .cta-section__title em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-vivid); }
+    .cta-section__actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-9); }
+    .cta-section .btn--primary { background: var(--brand-green-vivid); color: var(--brand-green-darker); }
+    .cta-section .btn--primary:hover { background: #fff; }
+    .cta-section .btn--ghost { border-color: rgba(255,255,255,0.30); color: var(--ink-inverse); }
+    .cta-section .btn--ghost:hover { border-color: var(--brand-green-vivid); background: rgba(46, 224, 122, 0.08); }
+    .footer { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-6); padding-top: var(--space-8); border-top: 1px solid rgba(255,255,255,0.12); font-size: var(--text-body-m); color: rgba(255,255,255,0.70); }
+    @media (max-width: 720px) { .footer { grid-template-columns: 1fr; } }
+    .footer h4 { font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: var(--tracking-uppercase); text-transform: uppercase; color: var(--brand-green-vivid); margin-bottom: var(--space-3); }
+    .footer__brand { font-family: var(--font-display); font-weight: 700; font-size: var(--text-heading-m); color: var(--ink-inverse); margin-bottom: var(--space-3); }
+    .footer ul { display: flex; flex-direction: column; gap: var(--space-2); }
+    .footer ul a { transition: color var(--duration-fast) var(--ease-out); }
+    .footer ul a:hover { color: var(--brand-green-vivid); }
+    .footer__meta { grid-column: 1 / -1; padding-top: var(--space-6); margin-top: var(--space-4); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; font-size: var(--text-caption); color: rgba(255,255,255,0.50); flex-wrap: wrap; gap: var(--space-3); }
+
+    /* ─── REVEAL ON SCROLL (v0.6 micro-interaction) ──────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+      transition-delay: var(--delay, 0ms);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ─── PRINT ──────────────────────────────────────────────────── */
+    @media print {
+      @page { size: A4 landscape; margin: 0; }
+      body { background: white; }
+      .header, .editorial-sidebar, .theme-toggle { display: none; }
+      .section { min-height: 210mm; padding-block: var(--space-7); page-break-after: always; break-after: page; }
+      .section:last-child { page-break-after: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      spline-viewer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="header__logo" href="#">
+        <span class="header__logo-mark">C</span>
+        <span>CACD2</span>
+      </a>
+      <nav class="header__nav" aria-label="Navigation principale">
+        <a href="#stats">Le groupe</a>
+        <a href="#positioning">Expertises</a>
+        <a href="#cases">Réalisations</a>
+        <a href="#rex">Lab</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header__actions">
+        <button class="theme-toggle" aria-label="Changer de thème" id="themeToggle">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+        <a class="btn btn--primary" href="#contact">
+          <span>Nous contacter</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- SECTION 01 — HERO avec Spline 3D -->
+    <section class="section hero">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Manifeste</span>
+        <span class="editorial-sidebar__tag">Intro.</span>
+        <span class="editorial-sidebar__page">01<span> / 09</span></span>
+      </aside>
+
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <div class="eyebrow hero__eyebrow reveal">
+            <span>●</span>&nbsp; Filiale 100% Crédit Agricole S.A.
+          </div>
+          <h1 class="display hero__title reveal" style="--delay: 100ms;">
+            Le partenaire <em>digital</em><br>
+            du groupe Crédit&nbsp;Agricole.
+          </h1>
+          <p class="hero__subtitle reveal" style="--delay: 200ms;">
+            CACD2 conçoit et réalise les projets digitaux du groupe — du design jusqu'à la mise en production. Une fabrique de solutions data, IT et produits, dédiée à 23+&nbsp;entités du Crédit Agricole.
+          </p>
+          <div class="hero__actions reveal" style="--delay: 300ms;">
+            <a class="btn btn--primary" href="#cases">
+              <span>Voir nos réalisations</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="#positioning"><span>Nos expertises</span></a>
+          </div>
+        </div>
+
+        <!-- Spline 3D scene + overlay qui masque le badge "Built with Spline" -->
+        <div class="hero__visual-wrap" aria-hidden="true">
+          <spline-viewer
+            class="hero__visual"
+            url="https://prod.spline.design/bwnZLF5JuoEvKzUY/scene.splinecode?v=3"
+            loading-anim-type="spinner-small-light"
+            background-color="transparent"
+            events-target="global"
+          ></spline-viewer>
+          <div class="hero__visual-cover"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 02 — STATS -->
+    <section class="section section--mint" id="stats">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Le groupe</span>
+        <span class="editorial-sidebar__tag">Data.</span>
+        <span class="editorial-sidebar__page">02<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="eyebrow section-header__eyebrow">En chiffres</p>
+          <h2 class="section-header__title">Six ans d'expertise <em>digital</em> au service du groupe.</h2>
+        </div>
+
+        <div class="stats">
+          <article class="stat reveal" style="--delay: 0ms;">
+            <div class="stat__value">70<sup>+</sup></div>
+            <div class="stat__label">Collaborateurs Design, Produit et&nbsp;Tech</div>
+          </article>
+          <article class="stat reveal" style="--delay: 100ms;">
+            <div class="stat__value">45</div>
+            <div class="stat__label">Projets réalisés depuis la création</div>
+          </article>
+          <article class="stat reveal" style="--delay: 200ms;">
+            <div class="stat__value">23<sup>+</sup></div>
+            <div class="stat__label">Entités du groupe accompagnées</div>
+          </article>
+          <article class="stat stat--highlight reveal" style="--delay: 300ms;">
+            <div class="stat__value">100<sup>%</sup></div>
+            <div class="stat__label">Filiale Crédit Agricole&nbsp;S.A.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 03 — POSITIONNEMENT -->
+    <section class="section section--base" id="positioning">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Positionnement</span>
+        <span class="editorial-sidebar__tag">Offer.</span>
+        <span class="editorial-sidebar__page">03<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="eyebrow section-header__eyebrow">Notre offre</p>
+          <h2 class="section-header__title">Fabricants et opérateurs de solutions <em>IT</em>.</h2>
+          <p class="section-header__lead">Quatre piliers complémentaires pour accompagner les entités du Crédit Agricole, du cadrage stratégique à l'exploitation en production.</p>
+        </div>
+
+        <div class="pillars">
+          <article class="pillar reveal" style="--delay: 0ms;">
+            <div class="pillar__num">01</div>
+            <h3 class="pillar__title">Produit &amp; Projet</h3>
+            <p class="pillar__desc">Accompagnement complet du cycle de vie produit, du cadrage à la mise en marché.</p>
+            <span class="pillar__arrow">Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </article>
+          <article class="pillar reveal" style="--delay: 100ms;">
+            <div class="pillar__num">02</div>
+            <h3 class="pillar__title">Expertise</h3>
+            <p class="pillar__desc">Conseil, audits et formations en Agilité, UX/UI et architecture technique.</p>
+            <span class="pillar__arrow">Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </article>
+          <article class="pillar reveal" style="--delay: 200ms;">
+            <div class="pillar__num">03</div>
+            <h3 class="pillar__title">Bien commun</h3>
+            <p class="pillar__desc">Veille technologique partagée et assets mutualisés au service du groupe.</p>
+            <span class="pillar__arrow">Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </article>
+          <article class="pillar reveal" style="--delay: 300ms;">
+            <div class="pillar__num">04</div>
+            <h3 class="pillar__title">Digital Factory</h3>
+            <p class="pillar__desc">Équipes mixtes intégrées avec engagement pluriannuel sur les enjeux clés.</p>
+            <span class="pillar__arrow">Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 04 — DIVIDER + Expertises + Almanach -->
+    <section class="section section--mint">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Expertises</span>
+        <span class="editorial-sidebar__tag">Tech.</span>
+        <span class="editorial-sidebar__page">04<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-divider__inner reveal">
+          <div class="section-divider__num">04</div>
+          <div>
+            <p class="eyebrow" style="margin-bottom: var(--space-3);">Chapitre 04</p>
+            <h2 class="section-divider__label">Expertises<em style="font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green);">.</em></h2>
+            <p class="section-header__lead">Quatre savoir-faire combinés pour livrer des produits digitaux en environnement bancaire.</p>
+          </div>
+        </div>
+
+        <div class="section-divider__expertises">
+          <article class="expertise-card reveal" style="--delay: 0ms;">
+            <span class="expertise-card__num">→ 01</span>
+            <div class="expertise-card__title">Conseil &amp; Expertise</div>
+          </article>
+          <article class="expertise-card reveal" style="--delay: 80ms;">
+            <span class="expertise-card__num">→ 02</span>
+            <div class="expertise-card__title">Accompagnement Product End-to-End</div>
+          </article>
+          <article class="expertise-card reveal" style="--delay: 160ms;">
+            <span class="expertise-card__num">→ 03</span>
+            <div class="expertise-card__title">Fabricant &amp; Opérateur de solutions SaaS</div>
+          </article>
+          <article class="expertise-card reveal" style="--delay: 240ms;">
+            <span class="expertise-card__num">→ 04</span>
+            <div class="expertise-card__title">IT as a Service</div>
+          </article>
+        </div>
+
+        <div class="almanach reveal" style="--delay: 200ms;" role="table" aria-label="Détail des expertises">
+          <div class="almanach__header" role="row">
+            <div role="columnheader">Expertise</div>
+            <div role="columnheader">Format</div>
+            <div role="columnheader">Engagement</div>
+            <div role="columnheader">Indicateur</div>
+          </div>
+          <div class="almanach__row" role="row">
+            <div class="almanach__name" role="cell">Conseil &amp; <em>Expertise</em></div>
+            <div class="almanach__cell" role="cell"><em>Audit</em>, formation, sprint dédié</div>
+            <div class="almanach__cell" role="cell">6 à 24 semaines</div>
+            <div class="almanach__cell" role="cell">Livrable</div>
+          </div>
+          <div class="almanach__row" role="row">
+            <div class="almanach__name" role="cell">Product <em>End-to-End</em></div>
+            <div class="almanach__cell" role="cell">Équipe mixte CACD2 + métier</div>
+            <div class="almanach__cell" role="cell">Pluri-annuel</div>
+            <div class="almanach__cell" role="cell">Mise en production</div>
+          </div>
+          <div class="almanach__row" role="row">
+            <div class="almanach__name" role="cell">Solutions <em>SaaS</em></div>
+            <div class="almanach__cell" role="cell">Build &amp; run, opéré CACD2</div>
+            <div class="almanach__cell" role="cell">Continu</div>
+            <div class="almanach__cell" role="cell">Uptime, MRR</div>
+          </div>
+          <div class="almanach__row" role="row">
+            <div class="almanach__name" role="cell">IT as a <em>Service</em></div>
+            <div class="almanach__cell" role="cell">Run &amp; Ops mutualisés</div>
+            <div class="almanach__cell" role="cell">Continu</div>
+            <div class="almanach__cell" role="cell">SLA, NPS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 05 — MARQUEURS -->
+    <section class="section section--base">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Marqueurs</span>
+        <span class="editorial-sidebar__tag">Method.</span>
+        <span class="editorial-sidebar__page">05<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="eyebrow section-header__eyebrow">Nos marqueurs clés</p>
+          <h2 class="section-header__title">Trois principes qui guident <em>chacun</em> de nos projets.</h2>
+        </div>
+
+        <div class="markers">
+          <article class="marker reveal" style="--delay: 0ms;">
+            <div class="marker__icon">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                <path d="M32 8 L56 20 L32 32 L8 20 Z"/>
+                <path d="M8 20 L8 44 L32 56 L32 32"/>
+                <path d="M56 20 L56 44 L32 56"/>
+                <path d="M20 14 L44 26"/>
+              </svg>
+            </div>
+            <h3 class="marker__title">Delivery</h3>
+            <p class="marker__desc">On livre. Pas de slideware, pas de POC orphelin : nos engagements se mesurent en production.</p>
+          </article>
+          <article class="marker reveal" style="--delay: 120ms;">
+            <div class="marker__icon">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="20" cy="24" r="8"/>
+                <circle cx="44" cy="24" r="8"/>
+                <circle cx="32" cy="46" r="8"/>
+                <path d="M26 26 L38 26 M24 30 L28 40 M40 30 L36 40"/>
+              </svg>
+            </div>
+            <h3 class="marker__title">Collectif</h3>
+            <p class="marker__desc">Équipes mixtes CACD2 + métier. La co-construction n'est pas un argument, c'est une mécanique d'organisation.</p>
+          </article>
+          <article class="marker reveal" style="--delay: 240ms;">
+            <div class="marker__icon">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                <rect x="14" y="36" width="36" height="14" rx="1"/>
+                <rect x="18" y="22" width="28" height="14" rx="1"/>
+                <rect x="22" y="8"  width="20" height="14" rx="1"/>
+              </svg>
+            </div>
+            <h3 class="marker__title">Concret</h3>
+            <p class="marker__desc">Métiers bancaires, contraintes réglementaires, legacy IT : on travaille à hauteur du réel, pas au-dessus.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 06 — RÉALISATIONS -->
+    <section class="section section--mint" id="cases">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Réalisations</span>
+        <span class="editorial-sidebar__tag">Work.</span>
+        <span class="editorial-sidebar__page">06<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="eyebrow section-header__eyebrow">Sélection projets</p>
+          <h2 class="section-header__title">Du <em>cadrage</em> stratégique à l'exploitation en production.</h2>
+        </div>
+
+        <div class="cases">
+          <article class="case reveal" style="--delay: 0ms;">
+            <div class="case__visual case__visual--dark">
+              <div class="mockup-phone">
+                <div class="mockup-phone__screen">Indosuez</div>
+              </div>
+            </div>
+            <div class="case__body">
+              <p class="case__category">Mobile · Wealth Management</p>
+              <h3 class="case__title">Indosuez Wealth Management</h3>
+              <p class="case__desc">Application mobile de gestion patrimoniale pour les clients d'Indosuez. Authentification renforcée, parcours de souscription, suivi de portefeuille.</p>
+            </div>
+          </article>
+
+          <article class="case reveal" style="--delay: 150ms;">
+            <div class="case__visual">
+              <div class="mockup-screen">
+                <div class="mockup-screen__sidebar"></div>
+                <div class="mockup-screen__main">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+            <div class="case__body">
+              <p class="case__category">Desktop · Banque de détail</p>
+              <h3 class="case__title">LCL Outil conseiller</h3>
+              <p class="case__desc">Plateforme de gestion client pour les conseillers LCL. Vue 360°, gestion des tâches associées et synthèse patrimoniale unifiée.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 07 — TEASER REX / LAB -->
+    <section class="section section--base" id="rex">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Lab</span>
+        <span class="editorial-sidebar__tag">REX.</span>
+        <span class="editorial-sidebar__page">07<span> / 09</span></span>
+      </aside>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="eyebrow section-header__eyebrow">Le labo</p>
+          <h2 class="section-header__title">On partage ce qu'on <em>apprend</em>.</h2>
+          <p class="section-header__lead">Retours d'expérience, explorations, méthodes : les coulisses de la fabrique digitale CACD2, sans filtre.</p>
+        </div>
+
+        <a class="rex-card reveal" href="rex-design-system-ia.html">
+          <div class="rex-card__visual" aria-hidden="true">
+            <span class="rex-card__badge">REX</span>
+            <div class="rex-card__tiles">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="rex-card__body">
+            <p class="rex-card__category">Retour d'expérience · IA</p>
+            <h3 class="rex-card__title">Concevoir un design system <em>avec</em> l'IA.</h3>
+            <p class="rex-card__desc">Pendant une semaine, nous avons confié à Claude la conception d'un design system de transition. Ce qu'on en retient sur l'outil, notre métier, et ce que l'IA change vraiment.</p>
+            <div class="rex-card__meta">
+              <span>Prade Perrot</span>
+              <span>·</span>
+              <span>6 min de lecture</span>
+              <span class="rex-card__link">Lire le retour d'expérience
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+
+    <!-- SECTION 08 — CITATION + accent botanique -->
+    <section class="section section--base" style="position: relative; overflow: hidden;">
+      <aside class="editorial-sidebar" aria-hidden="true">
+        <span class="editorial-sidebar__label">Manifeste</span>
+        <span class="editorial-sidebar__tag">Vision.</span>
+        <span class="editorial-sidebar__page">08<span> / 09</span></span>
+      </aside>
+
+      <div class="botanical-accent" style="right: -2vw; top: 8vh; width: 28vw; max-width: 360px; aspect-ratio: 1 / 2.4;" aria-hidden="true">
+        <svg viewBox="0 0 200 480" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round">
+          <path d="M100 470 Q100 380 100 280 Q100 180 100 80 Q100 40 100 10"/>
+          <g>
+            <path d="M100 430 Q72 410 48 398 Q34 392 24 388"/>
+            <path d="M100 395 Q128 376 152 362 Q166 354 178 348"/>
+            <path d="M100 360 Q70 338 44 322 Q30 314 18 308"/>
+            <path d="M100 325 Q130 304 156 288 Q170 280 184 274"/>
+            <path d="M100 290 Q72 268 50 252 Q36 242 24 234"/>
+            <path d="M100 255 Q128 232 154 216 Q168 208 180 200"/>
+            <path d="M100 220 Q74 198 54 182 Q42 174 30 166"/>
+            <path d="M100 185 Q125 162 148 146 Q162 138 174 132"/>
+            <path d="M100 150 Q78 130 62 116 Q50 108 40 100"/>
+            <path d="M100 115 Q122 96 142 82 Q154 74 166 68"/>
+            <path d="M100 80 Q82 62 68 50 Q58 42 50 36"/>
+            <path d="M100 45 Q118 30 132 20 Q142 14 152 8"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container">
+        <div class="quote reveal">
+          <div class="quote__mark">"</div>
+          <p class="quote__text">Nous transformons les <em>ambitions</em> numériques du Groupe en solutions concrètes, cohérentes et durables.</p>
+          <div class="quote__author">Manifeste CACD2 — 2026</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 09 — CTA + Footer -->
+    <section class="cta-section" id="contact">
+      <div class="container cta-section__inner">
+        <h2 class="cta-section__title reveal">Une question, un <em>besoin</em>&thinsp;?</h2>
+
+        <div class="cta-section__actions reveal" style="--delay: 200ms;">
+          <a class="btn btn--primary" href="mailto:contact@cacd2.fr">
+            <span>contact@cacd2.fr</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="https://www.cacd2.fr/" target="_blank" rel="noopener"><span>Découvrir cacd2.fr</span></a>
+        </div>
+
+        <footer class="footer reveal" style="--delay: 400ms;">
+          <div>
+            <div class="footer__brand">CACD2</div>
+            <p>9 rue Antoine Chantin<br>75014 Paris</p>
+            <p style="margin-top: var(--space-3);">Filiale 100% Crédit Agricole&nbsp;S.A.</p>
+          </div>
+          <div>
+            <h4>Explorer</h4>
+            <ul>
+              <li><a href="#stats">Le groupe</a></li>
+              <li><a href="#positioning">Expertises</a></li>
+              <li><a href="#cases">Réalisations</a></li>
+              <li><a href="#rex">Lab</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Suivre</h4>
+            <ul>
+              <li><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="https://soundcloud.com" target="_blank" rel="noopener">SoundCloud</a></li>
+              <li><a href="https://www.cacd2.fr/" target="_blank" rel="noopener">Site institutionnel</a></li>
+            </ul>
+          </div>
+          <div class="footer__meta">
+            <span>© 2026 CACD2 — Crédit Agricole Conseil &amp; Développement Digital</span>
+            <span>Design system de transition · v0.7</span>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ─── Theme toggle (persist via localStorage) ─────────────────
+    (function () {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      const stored = localStorage.getItem('cacd2-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initial = stored || (prefersDark ? 'dark' : 'light');
+      html.setAttribute('data-theme', initial);
+      btn.addEventListener('click', () => {
+        const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('cacd2-theme', next);
+      });
+    })();
+
+    // ─── Reveal on scroll (IntersectionObserver, unobserve after fire) ─
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      if (!els.length) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => observer.observe(el));
+    })();
+
+    // ─── Magnetic glow on .btn (suit la souris) ──────────────────
+    document.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        btn.style.setProperty('--mx', x + '%');
+        btn.style.setProperty('--my', y + '%');
+      });
+    });
+
+    // ─── Spline : fade-in + suppression badge + forçage transparent dans shadow DOM
+    (function () {
+      const splineEl = document.querySelector('spline-viewer');
+      if (!splineEl) return;
+
+      const markLoaded = () => splineEl.classList.add('is-loaded');
+
+      const hideBadge = () => {
+        const shadow = splineEl.shadowRoot;
+        if (!shadow) return;
+        // Retire tout lien/élément renvoyant vers spline.design (le badge)
+        shadow.querySelectorAll('#logo, a[href*="spline"], a[target="_blank"]').forEach(el => el.remove());
+        if (!shadow.querySelector('#cacd2-badge-fix')) {
+          const s = document.createElement('style');
+          s.id = 'cacd2-badge-fix';
+          s.textContent = `
+            :host, canvas { background: transparent !important; }
+            #logo, a[href*="spline"], a[target="_blank"] { display: none !important; opacity: 0 !important; pointer-events: none !important; }
+          `;
+          shadow.appendChild(s);
+        }
+      };
+
+      // MutationObserver : retire le badge dès qu'il est injecté dans le shadow DOM
+      // (plus robuste que des setTimeout — réagit à toute ré-injection de Spline)
+      const startObserver = () => {
+        const shadow = splineEl.shadowRoot;
+        if (!shadow) { setTimeout(startObserver, 200); return; }
+        hideBadge();
+        const mo = new MutationObserver(hideBadge);
+        mo.observe(shadow, { childList: true, subtree: true });
+      };
+
+      splineEl.addEventListener('load', () => { markLoaded(); hideBadge(); });
+      startObserver();
+      [100, 400, 1000, 2500].forEach(d => setTimeout(hideBadge, d));
+      setTimeout(markLoaded, 3000);
+    })();
+  </script>
+
+</body>
+</html>

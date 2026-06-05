@@ -1,0 +1,150 @@
+/* ─────────────────────────────────────────────────────────────
+   CACD2 Design System — Tokens
+   Proposition transition · juin 2026
+   Light mode primaire · dark mode via [data-theme="dark"]
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* ─── SURFACES ──────────────────────────────────────────── */
+  --surface-mint:      #E8F5EC;  /* fond doux signature CACD2 */
+  --surface-base:      #FFFFFF;
+  --surface-elevated:  #FAFBF9;
+  --surface-inverse:   #0E2E22;  /* vert sapin profond */
+  --surface-deepest:   #061811;  /* presque noir-vert */
+
+  /* ─── ENCRE (texte) ─────────────────────────────────────── */
+  --ink-strong:    #0A0F0D;
+  --ink-default:   #1C2622;
+  --ink-muted:     #5B6661;
+  --ink-subtle:    #97A29D;
+  --ink-inverse:   #FFFFFF;
+
+  /* ─── BRAND ─────────────────────────────────────────────── */
+  --brand-green:        #01A04C;  /* vert CACD2 du logo */
+  --brand-green-soft:   #E8F5EC;
+  --brand-green-deep:   #0E2E22;
+  --brand-green-darker: #061811;
+  --brand-green-vivid:  #2EE07A;  /* version saturée — dark mode */
+
+  /* ─── ACCENTS ───────────────────────────────────────────── */
+  --accent-teal:   #2EB5A8;
+  --accent-amber:  #D4A038;
+
+  /* Iridescent — usage strict : visuel hero 3D uniquement */
+  --iridescent-1: #FF7A45;
+  --iridescent-2: #E5478B;
+  --iridescent-3: #7950F2;
+  --iridescent-4: #2389E5;
+
+  /* ─── BORDURES / DIVIDERS ───────────────────────────────── */
+  --border-subtle:  rgba(10, 15, 13, 0.08);
+  --border-default: rgba(10, 15, 13, 0.16);
+  --border-strong:  rgba(10, 15, 13, 0.40);
+
+  /* ─── TYPOGRAPHIE — familles ────────────────────────────── */
+  --font-display:    'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:       'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-editorial:  'Fraunces', 'Times New Roman', serif;
+  --font-mono:       'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+  /* ─── TYPOGRAPHIE — échelle fluide ──────────────────────── */
+  --text-display-2xl: clamp(5rem, 14vw, 11rem);     /* chiffres outline géants */
+  --text-display-xl:  clamp(3rem, 7vw, 5.5rem);     /* hero headline */
+  --text-display-l:   clamp(2.25rem, 5vw, 3.5rem);  /* section headline */
+  --text-display-m:   clamp(1.75rem, 3.5vw, 2.5rem);
+  --text-display-s:   clamp(1.5rem, 2.5vw, 2rem);
+  --text-heading-l:   1.5rem;
+  --text-heading-m:   1.25rem;
+  --text-body-xl:     1.125rem;
+  --text-body-l:      1rem;
+  --text-body-m:      0.875rem;
+  --text-caption:     0.75rem;
+
+  --leading-tight:   1.05;
+  --leading-snug:    1.2;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+
+  --tracking-tight:     -0.02em;
+  --tracking-normal:    0;
+  --tracking-wide:      0.08em;
+  --tracking-uppercase: 0.14em;
+
+  /* ─── ESPACEMENTS ───────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 144px;
+  --space-11: 200px;
+
+  /* ─── RAYONS ────────────────────────────────────────────── */
+  --radius-xs:   4px;
+  --radius-s:    8px;
+  --radius-m:   16px;
+  --radius-l:   24px;
+  --radius-xl:  32px;
+  --radius-pill: 999px;
+  --radius-full: 50%;
+
+  /* ─── OMBRES — souples, premium ─────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(10, 15, 13, 0.04);
+  --shadow-s:  0 2px 8px rgba(10, 15, 13, 0.06);
+  --shadow-m:  0 8px 24px rgba(10, 15, 13, 0.08);
+  --shadow-l:  0 24px 48px rgba(10, 15, 13, 0.10);
+  --shadow-xl: 0 40px 80px rgba(10, 15, 13, 0.16);
+
+  /* ─── LAYOUT ────────────────────────────────────────────── */
+  --container-max: 1280px;
+  --container-px:  clamp(20px, 4vw, 64px);
+  --grid-gap:      24px;
+
+  /* ─── MOTION ────────────────────────────────────────────── */
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:    150ms;
+  --duration-default: 280ms;
+  --duration-slow:    480ms;
+}
+
+/* ───────────────────────────────────────────────────────────
+   DARK MODE — inversion sélective
+   Activé par [data-theme="dark"] sur <html>
+   ─────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-mint:     #0E2E22;
+  --surface-base:     #0A0F0D;
+  --surface-elevated: #142019;
+  --surface-inverse:  #FAFBF9;
+  --surface-deepest:  #FFFFFF;
+
+  --ink-strong:  #FFFFFF;
+  --ink-default: #E8EDEA;
+  --ink-muted:   #97A29D;
+  --ink-subtle:  #5B6661;
+  --ink-inverse: #0A0F0D;
+
+  --brand-green:       #2EE07A;  /* version vive sur fond sombre */
+  --brand-green-soft:  #142019;
+  --brand-green-deep:  #2EE07A;
+
+  --border-subtle:  rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.16);
+  --border-strong:  rgba(255, 255, 255, 0.40);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-s:  0 2px 8px rgba(0, 0, 0, 0.40);
+  --shadow-m:  0 8px 24px rgba(0, 0, 0, 0.50);
+  --shadow-l:  0 24px 48px rgba(0, 0, 0, 0.60);
+  --shadow-xl: 0 40px 80px rgba(0, 0, 0, 0.70);
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>CACD2 — Slide titre / chapitre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    body { margin: 0; font-family: var(--font-body); background: #111; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .slide {
+      width: 100%; max-width: 1920px; aspect-ratio: 16/9;
+      position: relative; padding: clamp(40px, 5vw, 80px); overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.40); border-radius: 8px;
+      background: var(--brand-green-deep); color: var(--ink-inverse);
+    }
+    .slide__sidebar {
+      position: absolute; top: clamp(40px, 5vw, 80px); left: clamp(40px, 5vw, 80px); bottom: clamp(40px, 5vw, 80px);
+      display: flex; flex-direction: column; justify-content: space-between;
+      font-family: var(--font-display); font-size: 0.75rem;
+      letter-spacing: var(--tracking-uppercase); text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    .slide__brand { color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .slide__brand-mark {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--brand-green-vivid); color: var(--brand-green-darker);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px;
+    }
+    .slide__sidebar-label { writing-mode: vertical-rl; transform: rotate(180deg); align-self: flex-start; }
+    .slide__page { color: #fff; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .slide__page span { font-weight: 400; opacity: 0.5; }
+
+    .slide__content {
+      margin-left: 80px; height: 100%;
+      display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+    }
+    .title-num {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(8rem, 22vw, 19rem); line-height: 0.85;
+      letter-spacing: var(--tracking-tight);
+      color: transparent;
+      -webkit-text-stroke: 3px var(--brand-green-vivid);
+      margin-bottom: -0.22em;
+    }
+    .title-label {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(3rem, 7vw, 6.5rem); line-height: 0.95;
+      letter-spacing: var(--tracking-tight); color: #fff;
+      position: relative; z-index: 1; margin: 0;
+    }
+    .title-label em {
+      font-family: var(--font-editorial); font-style: italic; font-weight: 400;
+      color: var(--brand-green-vivid);
+    }
+    .title-dot { color: var(--brand-green-vivid); }
+  </style>
+</head>
+<body>
+  <article class="slide" data-template="title">
+
+    <aside class="slide__sidebar" aria-hidden="true">
+      <div class="slide__brand">
+        <span class="slide__brand-mark">C</span> CACD2
+      </div>
+      <div class="slide__sidebar-label">
+        <!-- @cacd2:content -->Expertises
+      </div>
+      <div class="slide__page">
+        <!-- @cacd2:content -->04<span> / 14</span>
+      </div>
+    </aside>
+
+    <div class="slide__content">
+      <div class="title-num">
+        <!-- @cacd2:content -->04
+      </div>
+      <h1 class="title-label">
+        <!-- @cacd2:content -->Expertises<span class="title-dot">.</span>
+      </h1>
+    </div>
+
+  </article>
+</body>
+</html>

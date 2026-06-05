@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>CACD2 — Slide content (visuel + texte)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    body { margin: 0; font-family: var(--font-body); background: #111; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .slide {
+      width: 100%; max-width: 1920px; aspect-ratio: 16/9;
+      position: relative; padding: clamp(40px, 5vw, 80px); overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.40); border-radius: 8px;
+      background: var(--surface-mint); color: var(--ink-strong);
+    }
+    .slide__sidebar {
+      position: absolute; top: clamp(40px, 5vw, 80px); left: clamp(40px, 5vw, 80px); bottom: clamp(40px, 5vw, 80px);
+      display: flex; flex-direction: column; justify-content: space-between;
+      font-family: var(--font-display); font-size: 0.75rem;
+      letter-spacing: var(--tracking-uppercase); text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .slide__brand { color: var(--ink-strong); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .slide__brand-mark {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--brand-green); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px;
+    }
+    .slide__sidebar-label { writing-mode: vertical-rl; transform: rotate(180deg); align-self: flex-start; }
+    .slide__page { color: var(--ink-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .slide__page span { font-weight: 400; color: var(--ink-muted); }
+
+    .slide__content {
+      margin-left: 80px; height: 100%;
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center;
+    }
+    .content-visual {
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, var(--brand-green-deep) 0%, var(--brand-green-darker) 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .content-visual::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(46, 224, 122, 0.15), transparent 60%);
+    }
+    .content-visual__mockup {
+      position: relative; z-index: 1;
+      width: 50%; aspect-ratio: 9 / 19;
+      background: #0c1a14; border-radius: 24px;
+      padding: 4px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.40);
+    }
+    .content-visual__screen {
+      width: 100%; height: 100%;
+      background: linear-gradient(180deg, #182027, #0a1318);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-family: var(--font-display); font-weight: 600;
+      font-size: 1rem; letter-spacing: 0.02em;
+    }
+
+    .content-text { display: flex; flex-direction: column; }
+    .eyebrow {
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 600;
+      letter-spacing: var(--tracking-uppercase); text-transform: uppercase;
+      color: var(--brand-green); margin-bottom: 20px;
+    }
+    .title {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.05;
+      letter-spacing: var(--tracking-tight); color: var(--ink-strong);
+      margin: 0 0 24px;
+    }
+    .title em { font-family: var(--font-editorial); font-style: italic; font-weight: 400; color: var(--brand-green-deep); }
+    .desc {
+      font-size: clamp(1rem, 1.2vw, 1.25rem); line-height: 1.55;
+      color: var(--ink-default); max-width: 50ch;
+      margin: 0 0 32px;
+    }
+    .meta {
+      padding-top: 24px;
+      border-top: 1px solid var(--border-default);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-display); font-size: 0.85rem; font-weight: 500;
+      color: var(--ink-muted);
+    }
+    .meta__nav { display: inline-flex; gap: 8px; }
+    .meta__arrow {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--brand-green); color: #fff;
+    }
+    .meta__arrow--ghost { background: transparent; border: 1px solid var(--border-default); color: var(--ink-muted); }
+  </style>
+</head>
+<body>
+  <article class="slide" data-template="content">
+
+    <aside class="slide__sidebar" aria-hidden="true">
+      <div class="slide__brand">
+        <span class="slide__brand-mark">C</span> CACD2
+      </div>
+      <div class="slide__sidebar-label">
+        <!-- @cacd2:content -->Réalisations
+      </div>
+      <div class="slide__page">
+        <!-- @cacd2:content -->06<span> / 14</span>
+      </div>
+    </aside>
+
+    <div class="slide__content">
+      <div class="content-visual">
+        <div class="content-visual__mockup">
+          <div class="content-visual__screen">
+            <!-- @cacd2:content -->Indosuez
+          </div>
+        </div>
+      </div>
+
+      <div class="content-text">
+        <div class="eyebrow">
+          <!-- @cacd2:content -->Mobile · Wealth Management
+        </div>
+        <h1 class="title">
+          <!-- @cacd2:content -->Indosuez Wealth <em>Management</em>.
+        </h1>
+        <p class="desc">
+          <!-- @cacd2:content -->Application mobile de gestion patrimoniale. Authentification renforcée, parcours de souscription, suivi de portefeuille temps réel.
+        </p>
+        <div class="meta">
+          <span><!-- @cacd2:content -->01 / 03</span>
+          <span class="meta__nav">
+            <span class="meta__arrow meta__arrow--ghost" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 19l-7-7 7-7"/></svg>
+            </span>
+            <span class="meta__arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </article>
+</body>
+</html>

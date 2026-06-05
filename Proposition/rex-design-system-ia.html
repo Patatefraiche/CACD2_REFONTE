@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REX — Concevoir un design system avec l'IA · CACD2</title>
+  <meta name="description" content="Retour d'expérience CACD2 : comment nous avons conçu un design system de transition avec Claude.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Spline 3D viewer (visuel slide finale) -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.40/build/spline-viewer.js"></script>
+
+  <style>
+    /* ============================================================
+       CACD2 — REX en mode présentation (deck carrousel horizontal)
+       ============================================================ */
+    :root {
+      color-scheme: light;
+      --surface-mint:#E8F5EC; --surface-base:#FFFFFF; --surface-elevated:#FAFBF9;
+      --surface-inverse:#0E2E22; --surface-deepest:#061811;
+      --ink-strong:#0A0F0D; --ink-default:#1C2622; --ink-muted:#5B6661; --ink-subtle:#97A29D; --ink-inverse:#FFFFFF;
+      --brand-green:#01A04C; --brand-green-soft:#E8F5EC; --brand-green-deep:#0E2E22; --brand-green-darker:#061811; --brand-green-vivid:#2EE07A;
+      --accent-teal:#2EB5A8; --accent-amber:#D4A038;
+      --border-subtle:rgba(10,15,13,0.08); --border-default:rgba(10,15,13,0.16); --border-strong:rgba(10,15,13,0.40);
+      --font-display:'Poppins','Helvetica Neue',Arial,sans-serif;
+      --font-body:'Inter','Helvetica Neue',Arial,sans-serif;
+      --font-editorial:'Fraunces','Times New Roman',serif;
+      --font-mono:'JetBrains Mono','SF Mono',Menlo,monospace;
+      --text-caption:0.75rem; --text-body-m:0.875rem; --text-body-l:1rem; --text-body-xl:1.125rem;
+      --leading-tight:1.05; --leading-snug:1.2; --leading-normal:1.5; --leading-relaxed:1.7;
+      --tracking-tight:-0.02em; --tracking-wide:0.08em; --tracking-uppercase:0.14em;
+      --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px;
+      --space-7:48px; --space-8:64px; --space-9:96px; --space-10:144px;
+      --radius-s:8px; --radius-m:16px; --radius-l:24px; --radius-xl:32px; --radius-pill:999px; --radius-full:50%;
+      --shadow-s:0 2px 8px rgba(10,15,13,0.06); --shadow-m:0 8px 24px rgba(10,15,13,0.08); --shadow-l:0 24px 48px rgba(10,15,13,0.10);
+      --container-px:clamp(24px,6vw,120px);
+      --ease-out:cubic-bezier(0.16,1,0.3,1); --ease-in-out:cubic-bezier(0.65,0,0.35,1); --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+      --dur-fast:150ms; --dur:280ms; --dur-slide:720ms;
+    }
+    [data-theme="dark"] {
+      color-scheme:dark;
+      --surface-mint:#0E2E22; --surface-base:#0A0F0D; --surface-elevated:#142019; --surface-inverse:#FAFBF9;
+      --ink-strong:#FFFFFF; --ink-default:#E8EDEA; --ink-muted:#97A29D; --ink-subtle:#5B6661; --ink-inverse:#0A0F0D;
+      --brand-green:#2EE07A; --brand-green-soft:#142019; --brand-green-deep:#2EE07A;
+      --border-subtle:rgba(255,255,255,0.08); --border-default:rgba(255,255,255,0.16); --border-strong:rgba(255,255,255,0.40);
+      --shadow-s:0 2px 8px rgba(0,0,0,0.40); --shadow-m:0 8px 24px rgba(0,0,0,0.50); --shadow-l:0 24px 48px rgba(0,0,0,0.60);
+    }
+
+    *,*::before,*::after { box-sizing:border-box; }
+    html { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    body {
+      margin:0; font-family:var(--font-body); font-size:var(--text-body-l);
+      line-height:var(--leading-normal); color:var(--ink-default); background:var(--surface-mint);
+      height:100vh; overflow:hidden;
+      transition:background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+    }
+    img,svg { display:block; max-width:100%; }
+    button { font:inherit; cursor:pointer; }
+    a { color:inherit; text-decoration:none; }
+    ul,ol { list-style:none; padding:0; margin:0; }
+    ::selection { background:var(--brand-green); color:var(--ink-inverse); }
+
+    .eyebrow {
+      font-family:var(--font-display); font-size:var(--text-caption); font-weight:600;
+      letter-spacing:var(--tracking-uppercase); text-transform:uppercase; color:var(--brand-green);
+      display:inline-flex; align-items:center; gap:var(--space-2);
+    }
+    .eyebrow::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--accent-amber); }
+
+    /* ─── HEADER (fixe au-dessus du deck) ────────────────────── */
+    .header { position:fixed; top:0; left:0; right:0; z-index:50; }
+    .header__inner { display:flex; align-items:center; justify-content:space-between; gap:var(--space-5); padding:var(--space-5) var(--container-px); }
+    .header__logo { display:flex; align-items:center; gap:var(--space-3); font-family:var(--font-display); font-weight:700; font-size:var(--text-body-l); letter-spacing:var(--tracking-tight); color:var(--ink-strong); }
+    .header__logo-mark { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:var(--radius-s); background:var(--brand-green); color:#fff; font-family:var(--font-display); font-weight:800; font-size:15px; letter-spacing:-0.04em; }
+    .header__back { display:inline-flex; align-items:center; gap:var(--space-2); margin-right:auto; padding-left:var(--space-3); font-size:var(--text-body-m); color:var(--ink-muted); transition:color var(--dur-fast) var(--ease-out); }
+    .header__back:hover { color:var(--ink-strong); }
+    .header__back svg { transition:transform var(--dur-fast) var(--ease-out); }
+    .header__back:hover svg { transform:translateX(-4px); }
+    .theme-toggle { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:var(--radius-pill); background:color-mix(in srgb, var(--surface-base) 60%, transparent); border:1px solid var(--border-default); color:var(--ink-default); transition:all var(--dur-fast) var(--ease-out); backdrop-filter:blur(8px); }
+    .theme-toggle:hover { background:var(--surface-base); transform:rotate(8deg); }
+    .theme-toggle svg { width:18px; height:18px; }
+    .theme-toggle .icon-sun { display:none; } .theme-toggle .icon-moon { display:block; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display:block; } [data-theme="dark"] .theme-toggle .icon-moon { display:none; }
+
+    .btn { display:inline-flex; align-items:center; gap:var(--space-2); padding:var(--space-3) var(--space-5); font-family:var(--font-display); font-size:var(--text-body-m); font-weight:600; border-radius:var(--radius-pill); border:1px solid transparent; transition:all var(--dur-fast) var(--ease-out); }
+    .btn svg { transition:transform 240ms var(--ease-out); }
+    .btn:hover svg { transform:translateX(4px); }
+    .btn--primary { background:var(--brand-green-deep); color:var(--ink-inverse); }
+    .btn--primary:hover { background:var(--brand-green); transform:translateY(-2px); box-shadow:var(--shadow-m); }
+    [data-theme="dark"] .btn--primary { background:var(--brand-green-vivid); color:var(--ink-inverse); }
+    .btn--ghost { background:transparent; border-color:var(--border-default); color:var(--ink-strong); }
+    .btn--ghost:hover { border-color:var(--ink-strong); }
+
+    /* ─── DECK / CARROUSEL ───────────────────────────────────── */
+    .deck { width:100vw; height:100vh; overflow:hidden; }
+    .deck__track { display:flex; height:100%; transition:transform var(--dur-slide) var(--ease-in-out); will-change:transform; }
+    .slide {
+      position:relative; min-width:100vw; width:100vw; height:100vh; flex-shrink:0;
+      display:flex; align-items:center;
+      padding:var(--space-10) var(--container-px) var(--space-9);
+      overflow-y:auto;
+    }
+    .slide__inner { width:100%; max-width:1180px; margin-inline:auto; }
+    .slide--mint { background:var(--surface-mint); }
+    .slide--base { background:var(--surface-base); }
+    .slide--inverse { background:var(--surface-inverse); color:var(--ink-inverse); }
+    [data-theme="dark"] .slide--inverse { background:var(--surface-elevated); }
+
+    /* index editorial (haut-gauche de chaque slide) */
+    .slide__index { position:absolute; top:var(--space-9); left:var(--container-px); font-family:var(--font-display); font-size:var(--text-caption); font-weight:600; letter-spacing:var(--tracking-uppercase); text-transform:uppercase; color:var(--ink-subtle); }
+    .slide--inverse .slide__index { color:rgba(255,255,255,0.5); }
+    .slide__index b { color:var(--brand-green); }
+    .slide--inverse .slide__index b { color:var(--brand-green-vivid); }
+
+    /* ─── ANIM d'entrée (re-jouée à chaque slide active) ─────── */
+    .anim { opacity:0; transform:translateY(28px); transition:opacity 640ms var(--ease-out), transform 640ms var(--ease-out); transition-delay:var(--delay,0ms); }
+    .slide.is-active .anim { opacity:1; transform:translateY(0); }
+    @media (prefers-reduced-motion:reduce){ .anim{ opacity:1; transform:none; transition:none; } }
+
+    /* ─── SLIDE COUVERTURE ───────────────────────────────────── */
+    .cover { display:grid; grid-template-columns:1.1fr 0.9fr; gap:var(--space-9); align-items:center; width:100%; }
+    @media (max-width:900px){ .cover { grid-template-columns:1fr; gap:var(--space-7); } }
+    .cover__eyebrow { margin-bottom:var(--space-5); }
+    .cover__title { font-family:var(--font-display); font-weight:700; font-size:clamp(2.5rem,6vw,5rem); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); color:var(--ink-strong); margin:0 0 var(--space-5); }
+    .cover__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-deep); }
+    [data-theme="dark"] .cover__title em { color:var(--brand-green-vivid); }
+    .cover__lead { font-size:var(--text-body-xl); line-height:var(--leading-relaxed); color:var(--ink-muted); max-width:50ch; margin:0 0 var(--space-7); }
+    .cover__meta { display:flex; gap:var(--space-6); flex-wrap:wrap; padding-top:var(--space-5); border-top:1px solid var(--border-default); }
+    .cover__meta-k { font-family:var(--font-mono); font-size:var(--text-caption); text-transform:uppercase; letter-spacing:var(--tracking-wide); color:var(--ink-subtle); display:block; margin-bottom:2px; }
+    .cover__meta-v { font-family:var(--font-display); font-weight:600; font-size:var(--text-body-m); color:var(--ink-strong); }
+
+    /* visuel tuiles flottantes */
+    .cover__visual { position:relative; aspect-ratio:1; max-width:440px; margin-inline:auto; width:100%; }
+    .float-tiles { position:absolute; inset:0; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:18px; }
+    .float-tiles span { border-radius:18px; background:var(--surface-base); border:1px solid var(--border-subtle); box-shadow:var(--shadow-m); animation:floaty 6s var(--ease-in-out) infinite; }
+    [data-theme="dark"] .float-tiles span { background:var(--surface-elevated); }
+    .float-tiles span:nth-child(1){ animation-delay:0s; }
+    .float-tiles span:nth-child(2){ background:var(--brand-green); border-color:var(--brand-green); animation-delay:.4s; }
+    .float-tiles span:nth-child(3){ animation-delay:.8s; }
+    .float-tiles span:nth-child(4){ animation-delay:1.2s; }
+    .float-tiles span:nth-child(5){ background:var(--brand-green-deep); border-color:var(--brand-green-deep); animation-delay:1.6s; }
+    .float-tiles span:nth-child(6){ animation-delay:2s; }
+    .float-tiles span:nth-child(7){ background:var(--accent-amber); border-color:var(--accent-amber); animation-delay:2.4s; }
+    .float-tiles span:nth-child(8){ animation-delay:2.8s; }
+    .float-tiles span:nth-child(9){ animation-delay:3.2s; }
+    @keyframes floaty { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @media (prefers-reduced-motion:reduce){ .float-tiles span{ animation:none; } }
+
+    /* ─── TITRES de slide ────────────────────────────────────── */
+    .slide__kicker { font-family:var(--font-mono); font-size:var(--text-body-m); color:var(--brand-green); margin-bottom:var(--space-3); }
+    .slide__title { font-family:var(--font-display); font-weight:700; font-size:clamp(1.9rem,4vw,3.25rem); line-height:var(--leading-snug); letter-spacing:var(--tracking-tight); color:var(--ink-strong); margin:0 0 var(--space-6); max-width:20ch; }
+    .slide__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-deep); }
+    .slide--inverse .slide__title { color:var(--ink-inverse); }
+    .slide--inverse .slide__title em { color:var(--brand-green-vivid); }
+    [data-theme="dark"] .slide__title em { color:var(--brand-green-vivid); }
+    .slide__lead { font-size:var(--text-body-xl); line-height:var(--leading-relaxed); color:var(--ink-muted); max-width:60ch; }
+    .slide__lead strong { color:var(--ink-strong); font-weight:600; }
+
+    /* ─── SLIDE CONTEXTE + COURBE ────────────────────────────── */
+    .ctx { display:grid; grid-template-columns:0.85fr 1.15fr; gap:var(--space-9); align-items:center; width:100%; }
+    @media (max-width:900px){ .ctx { grid-template-columns:1fr; gap:var(--space-6); } }
+    .chart { position:relative; width:100%; }
+    .chart svg { width:100%; height:auto; overflow:visible; }
+    .chart__curve { fill:none; stroke:var(--brand-green); stroke-width:3; stroke-linecap:round; stroke-linejoin:round;
+      stroke-dasharray:1600; stroke-dashoffset:1600; transition:stroke-dashoffset 2200ms var(--ease-out); }
+    .slide.is-active .chart__curve { stroke-dashoffset:0; }
+    .chart__area { fill:url(#areaGrad); opacity:0; transition:opacity 900ms var(--ease-out) 1400ms; }
+    .slide.is-active .chart__area { opacity:1; }
+    .chart__dot { fill:var(--brand-green); opacity:0; transition:opacity 400ms var(--ease-out) 2000ms; }
+    [data-theme="dark"] .chart__dot { fill:var(--brand-green-vivid); }
+    .slide.is-active .chart__dot { opacity:1; }
+    .chart__label { font-family:var(--font-mono); font-size:11px; fill:var(--ink-muted); text-transform:uppercase; letter-spacing:0.1em; opacity:0; transition:opacity 500ms var(--ease-out); }
+    .slide.is-active .chart__label { opacity:1; }
+    .chart__label--start { transition-delay:600ms; }
+    .chart__label--end { transition-delay:2100ms; fill:var(--brand-green); font-weight:600; }
+    [data-theme="dark"] .chart__curve { stroke:var(--brand-green-vivid); }
+    .chart__axis { stroke:var(--border-default); stroke-width:1; }
+
+    /* ─── STEPS (démarche) ───────────────────────────────────── */
+    .steps { display:grid; grid-template-columns:repeat(5,1fr); gap:var(--space-4); margin-top:var(--space-7); }
+    @media (max-width:900px){ .steps { grid-template-columns:1fr 1fr; } }
+    @media (max-width:560px){ .steps { grid-template-columns:1fr; } }
+    .step { padding:var(--space-5); background:var(--surface-base); border:1px solid var(--border-subtle); border-radius:var(--radius-l); transition:transform var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); }
+    [data-theme="dark"] .step { background:var(--surface-elevated); }
+    .step:hover { transform:translateY(-6px); border-color:var(--brand-green); }
+    .step__num { font-family:var(--font-display); font-weight:800; font-size:1.5rem; color:transparent; -webkit-text-stroke:1.5px var(--brand-green); line-height:1; margin-bottom:var(--space-4); }
+    .step__title { font-family:var(--font-display); font-weight:600; font-size:var(--text-body-l); color:var(--ink-strong); margin:0 0 var(--space-2); }
+    .step__desc { font-size:var(--text-body-m); color:var(--ink-muted); line-height:var(--leading-normal); margin:0; }
+
+    /* ─── LEARNINGS ──────────────────────────────────────────── */
+    .learns { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); margin-top:var(--space-7); }
+    @media (max-width:900px){ .learns { grid-template-columns:1fr 1fr; } }
+    @media (max-width:560px){ .learns { grid-template-columns:1fr; } }
+    .learn { padding:var(--space-6); background:var(--surface-mint); border:1px solid var(--border-subtle); border-radius:var(--radius-l); transition:transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); }
+    [data-theme="dark"] .learn { background:var(--surface-elevated); }
+    .learn:hover { transform:translateY(-6px); box-shadow:var(--shadow-m); border-color:var(--brand-green); }
+    .learn__num { font-family:var(--font-mono); font-size:var(--text-caption); color:var(--brand-green); margin-bottom:var(--space-3); display:block; }
+    .learn__title { font-family:var(--font-display); font-weight:700; font-size:var(--text-body-l); color:var(--ink-strong); line-height:var(--leading-snug); margin:0 0 var(--space-2); }
+    .learn__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-deep); }
+    [data-theme="dark"] .learn__title em { color:var(--brand-green-vivid); }
+    .learn__desc { font-size:var(--text-body-m); color:var(--ink-muted); line-height:var(--leading-normal); margin:0; }
+    .learn--wide { grid-column:span 2; }
+    @media (max-width:560px){ .learn--wide { grid-column:auto; } }
+
+    /* ─── CALLOUT (anti-clichés) ─────────────────────────────── */
+    .callout__list { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-3); margin-top:var(--space-6); }
+    @media (max-width:760px){ .callout__list { grid-template-columns:1fr; } }
+    .callout__item { display:flex; align-items:center; gap:var(--space-3); font-size:var(--text-body-m); color:rgba(255,255,255,0.85); padding:var(--space-4) var(--space-5); background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-m); }
+    .callout__item svg { flex-shrink:0; color:var(--brand-green-vivid); }
+
+    /* ─── CITATION ───────────────────────────────────────────── */
+    .quote { max-width:1000px; }
+    .quote__mark { font-family:var(--font-editorial); font-style:italic; font-size:clamp(5rem,10vw,8rem); line-height:0.5; color:var(--brand-green-vivid); margin-bottom:var(--space-4); }
+    .quote__text { font-family:var(--font-display); font-weight:600; font-size:clamp(1.6rem,4vw,3rem); line-height:1.25; letter-spacing:var(--tracking-tight); color:var(--ink-inverse); margin:0 0 var(--space-6); }
+    .quote__text em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-vivid); }
+    .quote__author { display:flex; align-items:center; gap:var(--space-3); font-family:var(--font-display); font-size:var(--text-body-m); font-weight:500; color:rgba(255,255,255,0.7); }
+    .quote__author::before { content:''; width:32px; height:1px; background:rgba(255,255,255,0.5); }
+
+    /* ─── RESULTS ────────────────────────────────────────────── */
+    .results__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5); margin-top:var(--space-7); }
+    @media (max-width:760px){ .results__grid { grid-template-columns:1fr; } }
+    .result { padding:var(--space-6); border-radius:var(--radius-l); background:var(--surface-mint); border:1px solid var(--border-subtle); }
+    [data-theme="dark"] .result { background:var(--surface-elevated); }
+    .result__v { font-family:var(--font-display); font-weight:700; font-size:clamp(2rem,4vw,3rem); line-height:1; color:var(--brand-green-deep); margin-bottom:var(--space-3); letter-spacing:var(--tracking-tight); }
+    [data-theme="dark"] .result__v { color:var(--brand-green-vivid); }
+    .result__l { font-size:var(--text-body-m); color:var(--ink-muted); }
+
+    /* ─── FINAL / CTA ────────────────────────────────────────── */
+    .final { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; width:100%; }
+    @media (max-width:900px){ .final { grid-template-columns:1fr; gap:var(--space-6); } }
+    .final__title { font-family:var(--font-display); font-weight:700; font-size:clamp(2rem,5vw,4rem); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); color:var(--ink-inverse); margin:0 0 var(--space-6); max-width:18ch; }
+    .final__title em { font-family:var(--font-editorial); font-style:italic; font-weight:400; color:var(--brand-green-vivid); }
+    .final__actions { display:flex; gap:var(--space-3); flex-wrap:wrap; }
+    /* visuel 3D slide finale */
+    .final__visual { position:relative; height:clamp(360px,56vh,580px); overflow:hidden; }
+    @media (max-width:900px){ .final__visual { height:340px; } }
+    .final__spline { display:block; width:100%; height:100%; border:0; opacity:0; transition:opacity 1200ms var(--ease-out); }
+    .final__spline.is-loaded { opacity:1; }
+    /* cover badge "Built with Spline" — couleur = fond de la slide (inverse en light, elevated en dark) */
+    .final__visual-cover { position:absolute; bottom:0; left:0; right:0; height:90px; background:linear-gradient(to top, var(--surface-inverse) 42%, transparent); pointer-events:none; z-index:2; }
+    [data-theme="dark"] .final__visual-cover { background:linear-gradient(to top, var(--surface-elevated) 42%, transparent); }
+    .slide--inverse .btn--primary { background:var(--brand-green-vivid); color:var(--brand-green-darker); }
+    .slide--inverse .btn--primary:hover { background:#fff; }
+    .slide--inverse .btn--ghost { border-color:rgba(255,255,255,0.3); color:var(--ink-inverse); }
+    .slide--inverse .btn--ghost:hover { border-color:var(--brand-green-vivid); }
+
+    /* ─── NAV FLÈCHES ────────────────────────────────────────── */
+    .deck-nav { position:fixed; top:50%; transform:translateY(-50%); z-index:40; width:52px; height:52px; border-radius:var(--radius-full); background:color-mix(in srgb, var(--surface-base) 70%, transparent); border:1px solid var(--border-default); color:var(--ink-strong); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px); transition:all var(--dur-fast) var(--ease-out); }
+    .deck-nav:hover { background:var(--brand-green); color:#fff; border-color:var(--brand-green); transform:translateY(-50%) scale(1.08); }
+    .deck-nav:disabled { opacity:0.3; pointer-events:none; }
+    .deck-nav--prev { left:clamp(12px,2vw,28px); }
+    .deck-nav--next { right:clamp(12px,2vw,28px); }
+    @media (max-width:560px){ .deck-nav { width:44px; height:44px; } }
+
+    /* ─── STEPPER ────────────────────────────────────────────── */
+    .stepper { position:fixed; bottom:clamp(16px,3vh,32px); left:50%; transform:translateX(-50%); z-index:40; display:flex; align-items:center; gap:var(--space-4); padding:var(--space-3) var(--space-5); background:color-mix(in srgb, var(--surface-base) 70%, transparent); border:1px solid var(--border-subtle); border-radius:var(--radius-pill); backdrop-filter:blur(10px); box-shadow:var(--shadow-m); }
+    .stepper__dots { display:flex; align-items:center; gap:var(--space-2); }
+    .stepper__dot { width:8px; height:8px; border-radius:var(--radius-full); background:var(--border-strong); border:0; padding:0; transition:all var(--dur) var(--ease-out); }
+    .stepper__dot:hover { transform:scale(1.4); }
+    .stepper__dot.is-active { width:28px; border-radius:var(--radius-pill); background:var(--brand-green); }
+    .stepper__count { font-family:var(--font-mono); font-size:var(--text-caption); color:var(--ink-muted); font-variant-numeric:tabular-nums; min-width:48px; text-align:center; }
+    .stepper__count b { color:var(--ink-strong); }
+    @media (max-width:560px){ .stepper__dots { display:none; } }
+
+    /* progression haut */
+    .deck-progress { position:fixed; top:0; left:0; height:3px; background:var(--brand-green); z-index:60; width:0; transition:width var(--dur-slide) var(--ease-in-out); }
+    [data-theme="dark"] .deck-progress { background:var(--brand-green-vivid); }
+
+    /* ─── PRINT : slides empilées ────────────────────────────── */
+    @media print {
+      body { height:auto; overflow:visible; }
+      .header, .deck-nav, .stepper, .deck-progress, .theme-toggle { display:none; }
+      .deck, .slide { height:auto; overflow:visible; }
+      .deck__track { display:block; transform:none !important; }
+      .slide { min-width:100%; page-break-after:always; padding:2cm; }
+      .anim { opacity:1 !important; transform:none !important; }
+      .chart__curve { stroke-dashoffset:0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-progress" id="progress" aria-hidden="true"></div>
+
+  <header class="header">
+    <div class="header__inner">
+      <a class="header__logo" href="index.html"><span class="header__logo-mark">C</span><span>CACD2</span></a>
+      <a class="header__back" href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"/></svg>
+        Accueil
+      </a>
+      <button class="theme-toggle" aria-label="Changer de thème" id="themeToggle">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="deck">
+    <div class="deck__track" id="track">
+
+      <!-- SLIDE 1 — COUVERTURE -->
+      <section class="slide slide--mint is-active">
+        <div class="slide__inner">
+          <div class="cover">
+            <div class="cover__text">
+              <p class="eyebrow cover__eyebrow anim">Retour d'expérience · Lab</p>
+              <h1 class="cover__title anim" style="--delay:80ms;">Concevoir un design system <em>avec</em> l'IA.</h1>
+              <p class="cover__lead anim" style="--delay:160ms;">Pendant une semaine, nous avons confié à Claude la conception d'un design system de transition. Ce qu'on en retient sur l'outil, notre métier, et ce que l'IA change vraiment.</p>
+              <div class="cover__meta anim" style="--delay:240ms;">
+                <div><span class="cover__meta-k">Auteur</span><span class="cover__meta-v">Prade Perrot</span></div>
+                <div><span class="cover__meta-k">Publié</span><span class="cover__meta-v">Juin 2026</span></div>
+                <div><span class="cover__meta-k">Durée</span><span class="cover__meta-v">8 slides · 6 min</span></div>
+              </div>
+            </div>
+            <div class="cover__visual anim" style="--delay:200ms;" aria-hidden="true">
+              <div class="float-tiles">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2 — CONTEXTE + COURBE -->
+      <section class="slide slide--base">
+        <span class="slide__index"><b>01</b> — Le contexte</span>
+        <div class="slide__inner">
+          <div class="ctx">
+            <div>
+              <p class="slide__kicker anim">Le point de départ</p>
+              <h2 class="slide__title anim" style="--delay:80ms;">Une production cohérente, mais <em>bancale</em>.</h2>
+              <p class="slide__lead anim" style="--delay:160ms;">Chacun produisait avec l'IA dans son coin. Rapide, mais <strong>incohérent</strong>. Il fallait un système de transition : assez cadré pour unifier, assez souple pour évoluer.</p>
+            </div>
+            <div class="chart anim" style="--delay:240ms;" aria-hidden="true">
+              <svg viewBox="0 0 600 320" role="img" aria-label="Courbe de la production bancale vers cohérente">
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--brand-green)" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="var(--brand-green)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <line class="chart__axis" x1="40" y1="290" x2="580" y2="290"/>
+                <!-- zone sous la courbe -->
+                <path class="chart__area" d="M40,250 L70,200 L95,265 L120,185 L150,270 L180,205 C260,250 360,150 580,70 L580,290 L40,290 Z"/>
+                <!-- courbe : zigzag chaotique à gauche → montée lisse à droite -->
+                <path class="chart__curve" d="M40,250 L70,200 L95,265 L120,185 L150,270 L180,205 C260,250 360,150 580,70"/>
+                <circle class="chart__dot" cx="580" cy="70" r="6"/>
+                <text class="chart__label chart__label--start" x="40" y="312">Avant · bancal</text>
+                <text class="chart__label chart__label--end" x="510" y="55">Après · cohérent</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3 — DÉMARCHE -->
+      <section class="slide slide--mint">
+        <span class="slide__index"><b>02</b> — La démarche</span>
+        <div class="slide__inner">
+          <p class="slide__kicker anim">De l'intention au système</p>
+          <h2 class="slide__title anim" style="--delay:80ms;">Cinq étapes, comme en <em>interne</em>.</h2>
+          <div class="steps">
+            <div class="step anim" style="--delay:160ms;"><div class="step__num">1</div><h3 class="step__title">Explorer</h3><p class="step__desc">Analyser l'existant et les références, sans copier ce que l'IA fait partout.</p></div>
+            <div class="step anim" style="--delay:240ms;"><div class="step__num">2</div><h3 class="step__title">Trancher</h3><p class="step__desc">Palette, typo, principes. Une page de décisions validée avant tout code.</p></div>
+            <div class="step anim" style="--delay:320ms;"><div class="step__num">3</div><h3 class="step__title">Coder</h3><p class="step__desc">Des tokens réutilisables : la grammaire invisible de la cohérence.</p></div>
+            <div class="step anim" style="--delay:400ms;"><div class="step__num">4</div><h3 class="step__title">Assembler</h3><p class="step__desc">Une page hybride site/slides où chaque section devient un gabarit.</p></div>
+            <div class="step anim" style="--delay:480ms;"><div class="step__num">5</div><h3 class="step__title">Capitaliser</h3><p class="step__desc">Le système packagé en skill : l'équipe produit cohérent sans repartir de zéro.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4 — APPRENTISSAGES -->
+      <section class="slide slide--base">
+        <span class="slide__index"><b>03</b> — Les apprentissages</span>
+        <div class="slide__inner">
+          <p class="slide__kicker anim">Ce qu'on retient</p>
+          <h2 class="slide__title anim" style="--delay:80ms;">Ce que l'IA nous a vraiment <em>appris</em>.</h2>
+          <div class="learns">
+            <article class="learn anim" style="--delay:160ms;"><span class="learn__num">→ 01</span><h3 class="learn__title">Anti-<em>direction</em>, pas anti-design</h3><p class="learn__desc">Le bancal venait de l'absence de système, pas de l'outil. Le goût et les arbitrages restent notre métier.</p></article>
+            <article class="learn anim" style="--delay:240ms;"><span class="learn__num">→ 02</span><h3 class="learn__title">Le prompt, c'est de l'<em>itération</em></h3><p class="learn__desc">On ne commande pas un résultat, on le sculpte par essais — comme le visuel 3D du hero, repris plusieurs fois.</p></article>
+            <article class="learn anim" style="--delay:320ms;"><span class="learn__num">→ 03</span><h3 class="learn__title">Capitaliser bat le <em>one-shot</em></h3><p class="learn__desc">Une slide générée est jetable. Un système vivant dans Claude est un actif partagé par toute l'équipe.</p></article>
+            <article class="learn anim" style="--delay:400ms;"><span class="learn__num">→ 04</span><h3 class="learn__title">L'humain dans la <em>boucle</em></h3><p class="learn__desc">L'IA propose, l'humain tranche. Les micro-arbitrages font la différence entre « correct » et « juste ».</p></article>
+            <article class="learn learn--wide anim" style="--delay:480ms;"><span class="learn__num">→ 05</span><h3 class="learn__title">Les anti-clichés sont la <em>signature</em></h3><p class="learn__desc">Fuir les fusées, nuages, dégradés pastels et tirets cabossés qu'on voit partout : la contrainte négative est devenue notre meilleur outil de différenciation.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5 — DISCIPLINE / ANTI-CLICHÉS -->
+      <section class="slide slide--inverse">
+        <span class="slide__index"><b>04</b> — La discipline</span>
+        <div class="slide__inner">
+          <p class="eyebrow anim" style="color:var(--brand-green-vivid);">La règle</p>
+          <h2 class="slide__title anim" style="--delay:80ms;">Ce qu'on s'est <em>interdit</em>.</h2>
+          <p class="slide__lead anim" style="--delay:160ms; color:rgba(255,255,255,0.8);">Une liste d'interdits intégrée au skill, pour que l'IA évite d'elle-même les automatismes de l'esthétique générative.</p>
+          <div class="callout__list">
+            <div class="callout__item anim" style="--delay:240ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Fusées, nuages, cerveaux</div>
+            <div class="callout__item anim" style="--delay:300ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Dégradés pastels purple/pink</div>
+            <div class="callout__item anim" style="--delay:360ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Tirets cabossés partout</div>
+            <div class="callout__item anim" style="--delay:420ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Imagerie stock générique</div>
+            <div class="callout__item anim" style="--delay:480ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Fonds noirs primaires</div>
+            <div class="callout__item anim" style="--delay:540ms;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Formules creuses</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6 — CITATION -->
+      <section class="slide slide--inverse">
+        <span class="slide__index"><b>05</b> — Le constat</span>
+        <div class="slide__inner">
+          <div class="quote">
+            <div class="quote__mark anim">"</div>
+            <p class="quote__text anim" style="--delay:120ms;">L'IA ne remplace pas la <em>direction</em>. Elle la rend exigeante : sans intention claire, elle produit du vide cohérent.</p>
+            <div class="quote__author anim" style="--delay:280ms;">Prade Perrot — CACD2</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7 — RÉSULTATS -->
+      <section class="slide slide--mint">
+        <span class="slide__index"><b>06</b> — Les résultats</span>
+        <div class="slide__inner">
+          <p class="slide__kicker anim">Ce qu'on a produit</p>
+          <h2 class="slide__title anim" style="--delay:80ms;">Une base <em>vivante</em>, pas un livrable figé.</h2>
+          <div class="results__grid">
+            <div class="result anim" style="--delay:160ms;"><div class="result__v">1</div><div class="result__l">semaine, une personne épaulée par Claude</div></div>
+            <div class="result anim" style="--delay:240ms;"><div class="result__v">9</div><div class="result__l">sections / gabarits réutilisables produits</div></div>
+            <div class="result anim" style="--delay:320ms;"><div class="result__v">1</div><div class="result__l">skill réutilisable par toute l'équipe</div></div>
+          </div>
+          <p class="slide__lead anim" style="--delay:400ms; margin-top:var(--space-7);">Prochaines étapes : intégrer nos vrais visuels 3D, synchroniser avec Figma, et étendre le skill aux propales, articles et fiches produits.</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 8 — FINAL / CTA + visuel 3D -->
+      <section class="slide slide--inverse">
+        <span class="slide__index"><b>07</b> — Et maintenant ?</span>
+        <div class="slide__inner">
+          <div class="final">
+            <div class="final__text">
+              <p class="eyebrow anim" style="color:var(--brand-green-vivid);">Discutons</p>
+              <h2 class="final__title anim" style="--delay:80ms;">Envie d'un système qui vous <em>ressemble</em> ?</h2>
+              <div class="final__actions anim" style="--delay:200ms;">
+                <a class="btn btn--primary" href="mailto:contact@cacd2.fr"><span>contact@cacd2.fr</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+                <a class="btn btn--ghost" href="index.html"><span>Revenir à l'accueil</span></a>
+              </div>
+            </div>
+            <div class="final__visual anim" style="--delay:160ms;" aria-hidden="true">
+              <spline-viewer class="final__spline" url="https://prod.spline.design/Y8KMg4crNi7Xa7yD/scene.splinecode" background-color="transparent"></spline-viewer>
+              <div class="final__visual-cover"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <button class="deck-nav deck-nav--prev" id="prev" aria-label="Slide précédente">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="deck-nav deck-nav--next" id="next" aria-label="Slide suivante">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+
+  <nav class="stepper" aria-label="Navigation des slides">
+    <span class="stepper__count"><b id="cur">01</b> / 08</span>
+    <div class="stepper__dots" id="dots"></div>
+  </nav>
+
+  <script>
+    // Theme
+    (function () {
+      const html = document.documentElement, btn = document.getElementById('themeToggle');
+      const stored = localStorage.getItem('cacd2-theme');
+      html.setAttribute('data-theme', stored || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      btn.addEventListener('click', () => {
+        const n = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', n); localStorage.setItem('cacd2-theme', n);
+      });
+    })();
+
+    // Deck carrousel
+    (function () {
+      const track = document.getElementById('track');
+      const slides = Array.from(track.children);
+      const total = slides.length;
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      const dotsWrap = document.getElementById('dots');
+      const curEl = document.getElementById('cur');
+      const progress = document.getElementById('progress');
+      let index = 0;
+
+      // build dots
+      slides.forEach((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'stepper__dot' + (i === 0 ? ' is-active' : '');
+        d.setAttribute('aria-label', 'Aller à la slide ' + (i + 1));
+        d.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(d);
+      });
+      const dots = Array.from(dotsWrap.children);
+
+      function render() {
+        track.style.transform = 'translateX(' + (-index * 100) + 'vw)';
+        slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+        curEl.textContent = String(index + 1).padStart(2, '0');
+        progress.style.width = ((index + 1) / total * 100) + '%';
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === total - 1;
+      }
+      function goTo(i) { index = Math.max(0, Math.min(total - 1, i)); render(); }
+      function next() { goTo(index + 1); }
+      function prev() { goTo(index - 1); }
+
+      nextBtn.addEventListener('click', next);
+      prevBtn.addEventListener('click', prev);
+
+      // clavier
+      addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); next(); }
+        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+        else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        else if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+      });
+
+      // swipe tactile
+      let x0 = null;
+      track.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', (e) => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0;
+        if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+        x0 = null;
+      }, { passive: true });
+
+      // molette horizontale → navigation (trackpad swipe)
+      let wheelLock = false;
+      addEventListener('wheel', (e) => {
+        if (wheelLock) return;
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 30) {
+          wheelLock = true; e.deltaX > 0 ? next() : prev();
+          setTimeout(() => wheelLock = false, 800);
+        }
+      }, { passive: true });
+
+      render();
+    })();
+
+    // Spline (slide finale) : fondu quand prêt + masquage badge
+    (function () {
+      const el = document.querySelector('.final__spline');
+      if (!el) return;
+      const markLoaded = () => el.classList.add('is-loaded');
+      const hideBadge = () => {
+        const sh = el.shadowRoot; if (!sh) return;
+        sh.querySelectorAll('#logo, a[href*="spline"], a[target="_blank"]').forEach(n => n.remove());
+        if (!sh.querySelector('#cacd2-badge-fix')) {
+          const s = document.createElement('style');
+          s.id = 'cacd2-badge-fix';
+          s.textContent = ':host,canvas{background:transparent!important}#logo,a[href*="spline"]{display:none!important;opacity:0!important}';
+          sh.appendChild(s);
+        }
+      };
+      el.addEventListener('load', () => { markLoaded(); hideBadge(); });
+      [100, 400, 1000, 2500, 4000].forEach(d => setTimeout(hideBadge, d));
+      setTimeout(markLoaded, 3000);
+    })();
+  </script>
+
+</body>
+</html>
