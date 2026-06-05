@@ -276,6 +276,8 @@
       /* Verrouille le visuel : l'animation autonome continue, mais on ne
          peut plus l'attraper/déplacer/orbiter à la souris. */
       pointer-events: none;
+      /* Nudge : -10px à gauche, +10px vers le bas. */
+      transform: translate(-10px, 10px);
     }
     /* Fade-in du Spline quand prêt */
     spline-viewer { opacity: 0; transition: opacity 1200ms var(--ease-out); }
