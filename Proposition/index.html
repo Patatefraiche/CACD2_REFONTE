@@ -11,6 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
 
   <!-- Spline 3D viewer (Web Component vanilla, équivalent du composant React @splinetool/react-spline) -->
+  <!-- Préchargement réseau : warm DNS/TLS du CDN + du domaine de scène pour accélérer le 1er affichage -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://prod.spline.design" crossorigin>
+  <link rel="modulepreload" href="https://unpkg.com/@splinetool/viewer@1.10.40/build/spline-viewer.js">
   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.40/build/spline-viewer.js"></script>
 
   <style>
@@ -283,7 +287,7 @@
       transform: translate(-25px, 10px);
     }
     /* Fade-in du Spline quand prêt */
-    spline-viewer { opacity: 0; transition: opacity 1200ms var(--ease-out); }
+    spline-viewer { opacity: 0; transition: opacity 600ms var(--ease-out); }
     spline-viewer.is-loaded { opacity: 1; }
     /* Badge cover — bande pleine largeur en bas. Le badge Spline est centré-bas,
        la touche 3D ne descend pas jusqu'en bas → le cover ne la masque pas. */
@@ -1086,7 +1090,14 @@
       splineEl.addEventListener('load', () => { markLoaded(); hideBadge(); });
       startObserver();
       [100, 400, 1000, 2500].forEach(d => setTimeout(hideBadge, d));
-      setTimeout(markLoaded, 3000);
+      // Anti-course : on révèle dès que le <canvas> WebGL apparaît (shadow ouvert),
+      // sinon filet de sécurité court (~700ms) — fini l'attente de 3s si l'événement 'load' est manqué.
+      let revealTries = 0;
+      const revealPoll = setInterval(() => {
+        if (splineEl.classList.contains('is-loaded')) { clearInterval(revealPoll); return; }
+        const hasCanvas = splineEl.shadowRoot && splineEl.shadowRoot.querySelector('canvas');
+        if (hasCanvas || ++revealTries > 7) { markLoaded(); clearInterval(revealPoll); }
+      }, 100);
     })();
   </script>
 
